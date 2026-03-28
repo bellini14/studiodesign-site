@@ -21,7 +21,7 @@ const FeatureTabs = () => {
     },
     {
       cardTitle: "Holistic Vision",
-      image: "https://images.unsplash.com/photo-1600607687920-4e2a09c15468?q=80&w=774&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=774&auto=format&fit=crop",
       description: "Guiding the holistic visual outcome across all touchpoints, from photography to spatial design."
     },
     {
@@ -52,7 +52,10 @@ const FeatureTabs = () => {
               {cardData.cardTitle}
             </h3>
             <div className="space-y-4">
-              <p className="text-sm md:text-base text-[#D6D3D1] leading-relaxed font-medium">
+              <p 
+                className="text-sm md:text-base leading-relaxed font-medium" 
+                style={{ color: '#D6D3D1' }}
+              >
                 {cardData.description}
               </p>
             </div>
@@ -74,7 +77,7 @@ const FeatureTabs = () => {
             <h2 className="text-h2 md:text-[clamp(2.5rem,4vw,3.5rem)] font-bold leading-[1.1] text-primary tracking-tight mb-8">
               Expertise
             </h2>
-            <p className="text-base md:text-lg text-[#D6D3D1] max-w-xl text-balance font-medium">
+            <p className="text-base md:text-lg text-white max-w-xl text-balance font-medium">
               A comprehensive suite of design and digital services crafted for visionary founders and institutions seeking aesthetic refinement.
             </p>
           </div>
@@ -115,14 +118,14 @@ const FeatureTabs = () => {
 
         {/* Right Side: Tab Panels */}
         <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
-          <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden bg-[#D6D3D1] max-h-[700px] shadow-2xl">
+          <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden bg-[#181616] max-h-[700px] shadow-2xl">
             {/* Dynamic Background Images per tab - High Contrast Grayscale to match reference */}
             {cardsData.map((data, index) => (
               <img
                 key={`bg-${index}`}
                 alt={data.cardTitle}
                 className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] filter grayscale ${
-                  activeIndex === index ? 'opacity-40 scale-100' : activeIndex > index ? 'opacity-0 scale-105 blur-sm -translate-y-4' : 'opacity-0 scale-105 blur-sm translate-y-4'
+                  activeIndex === index ? 'opacity-100 scale-100' : activeIndex > index ? 'opacity-0 scale-105 blur-lg -translate-y-8' : 'opacity-0 scale-105 blur-lg translate-y-8'
                 }`}
                 src={data.image}
               />

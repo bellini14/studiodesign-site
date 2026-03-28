@@ -13,12 +13,12 @@
     font-family: inherit;
   }
 
-  h1:not(.text-pressure-title), 
-  h2:not(.text-pressure-title), 
-  h3:not(.text-pressure-title), 
-  h4:not(.text-pressure-title), 
-  h5:not(.text-pressure-title), 
-  h6:not(.text-pressure-title),
+  h1:not(.text-pressure-title):not(.menu-logo-text), 
+  h2:not(.text-pressure-title):not(.menu-logo-text), 
+  h3:not(.text-pressure-title):not(.menu-logo-text), 
+  h4:not(.text-pressure-title):not(.menu-logo-text), 
+  h5:not(.text-pressure-title):not(.menu-logo-text), 
+  h6:not(.text-pressure-title):not(.menu-logo-text),
   p:not(.text-pressure-title):not(.menu-logo-text), 
   span:not(.text-pressure-title):not(.text-pressure-title *):not(.menu-logo-text):not(.menu-logo-text *), 
   a:not(.text-pressure-title):not(.menu-logo-text):not(:has(.menu-logo-text)), 

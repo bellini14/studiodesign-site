@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Lenis from 'lenis';
 import BubbleMenu from './components/ui/BubbleMenu';
 import ScrollToTop from './components/layout/ScrollToTop';
 import Footer from './components/layout/Footer';
@@ -47,6 +49,23 @@ const items = [
 ];
 
 function App() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 2.0,
+      easing: (t) => 1 - Math.pow(1 - t, 4),
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => lenis.destroy();
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
@@ -57,7 +76,7 @@ function App() {
               <span className="menu-logo-text" style={{
                 fontWeight: 300,
                 fontStyle: 'normal',
-                color: '#ff3b00',
+                color: '#f6f4d3',
                 letterSpacing: '-0.02em',
                 fontSize: '2.5rem'
               }}>studiodesign</span>

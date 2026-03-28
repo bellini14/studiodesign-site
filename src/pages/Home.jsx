@@ -4,6 +4,7 @@ import { HERO_CONTENT, ABOUT_CONTENT, SERVICES } from '../data/content';
 import { PORTFOLIO_PROJECTS } from '../data/portfolioData';
 import TextPressure from '../components/ui/TextPressure';
 import SplitText from '../components/ui/SplitText';
+import ScrollRevealText from '../components/ui/ScrollRevealText';
 import ProjectCard from '../components/ui/ProjectCard';
 import ColorBends from '../components/ColorBends';
 import ImageTrail from '../components/ui/ImageTrail';
@@ -91,7 +92,7 @@ const Home = () => {
           >
             <p
               style={{
-                color: '#D6D3D1',
+                color: '#FFFFFF',
                 fontSize: '1.3rem',
                 lineHeight: 1.6,
                 margin: 0,
@@ -137,18 +138,9 @@ const Home = () => {
           </h2>
           
           <div className="mb-14 w-full">
-            <SplitText
+            <ScrollRevealText
               text={ABOUT_CONTENT.philosophy}
-              className="text-[clamp(1.25rem,3vw,2.25rem)] md:text-[clamp(1.5rem,4vw,3.25rem)] leading-tight font-medium text-balance text-[#D6D3D1] inline-block text-center"
-              delay={35}
-              duration={1.2}
-              ease="power3.out"
-              splitType="words"
-              from={{ opacity: 0, y: 30 }}
-              to={{ opacity: 1, y: 0 }}
-              threshold={0.1}
-              rootMargin="-100px"
-              textAlign="center"
+              className="text-[clamp(1.25rem,3vw,2.25rem)] md:text-[clamp(1.5rem,4vw,3.25rem)] leading-tight font-medium text-balance text-white inline-block text-center"
             />
           </div>
 
