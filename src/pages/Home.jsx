@@ -14,11 +14,11 @@ const Home = () => {
   const lastTwoRows = PORTFOLIO_PROJECTS.slice(-6);
 
   return (
-    <div style={{ background: '#181616' }}>
+    <div style={{ background: '#0a0a0a' }}>
       {/* ──────────────── HERO SECTION ──────────────── */}
       <section
         style={{
-          background: '#181616',
+          background: '#0a0a0a',
           height: '100vh',
           minHeight: '600px',
           position: 'relative',
@@ -35,7 +35,7 @@ const Home = () => {
         </div>
 
         {/* Overlay for contrast */}
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: '#171515', opacity: 0.5, zIndex: 0, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0a0a0a', opacity: 0.5, zIndex: 0, pointerEvents: 'none' }} />
 
         {/* Center zone: Title */}
         <div
@@ -58,7 +58,7 @@ const Home = () => {
               width={false}
               weight={true}
               italic={false}
-              textColor="#f6f4d3"
+              textColor="#FFFFFF"
               strokeColor="#ff3b00"
               minFontSize={36}
               fontFamily={'"mokoko-variable", sans-serif'}
@@ -100,11 +100,11 @@ const Home = () => {
               }}
             >
               Um{' '}
-              <strong style={{ color: '#f6f4d3', fontWeight: 600 }}>
+              <strong style={{ color: '#FFFFFF', fontWeight: 600 }}>
                 estúdio de design
               </strong>{' '}
               contemporâneo dedicado à estratégia e à criação de{' '}
-              <strong style={{ color: '#f6f4d3', fontWeight: 600 }}>
+              <strong style={{ color: '#FFFFFF', fontWeight: 600 }}>
                 identidades de marca.
               </strong>
             </p>
@@ -150,10 +150,10 @@ const Home = () => {
           >
             <div className="relative h-[60px] md:h-[70px] flex flex-col w-[240px] md:w-[280px]">
               <div className="flex items-center justify-center h-full w-full bg-transparent transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
-                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-primary" style={{ color: '#F6F4D3' }}>Vamos Criar Agora</span>
+                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-primary" style={{ color: '#FFFFFF' }}>Vamos Criar Agora</span>
               </div>
               <div className="absolute inset-0 flex items-center justify-center h-full w-full bg-[#ff3b00] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] translate-y-full group-hover:translate-y-0" aria-hidden="true">
-                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-background" style={{ color: '#181616' }}>Vamos Criar Agora</span>
+                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-background" style={{ color: '#0a0a0a' }}>Vamos Criar Agora</span>
               </div>
             </div>
           </Link>
@@ -163,7 +163,7 @@ const Home = () => {
       {/* ──────────────── PROJETOS / PORTFOLIO PREVIEW ──────────────── */}
       <section
         style={{
-          background: '#181616',
+          background: '#0a0a0a',
           padding: '120px 0 120px',
         }}
         className="flex justify-center"
@@ -195,7 +195,7 @@ const Home = () => {
               </span>
               <h2
                 style={{
-                  color: '#f6f4d3',
+                  color: '#FFFFFF',
                   fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
@@ -211,10 +211,10 @@ const Home = () => {
               className="relative inline-flex overflow-hidden rounded-lg whitespace-nowrap shrink-0 mt-6 md:mt-0 group"
             >
               <div className="relative h-[48px] md:h-[60px] flex flex-col">
-                <div className="flex items-center justify-center h-full px-8 md:px-10 bg-[#ff3b00] text-[#f6f4d3] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
+                <div className="flex items-center justify-center h-full px-8 md:px-10 bg-[#ff3b00] text-[#FFFFFF] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
                   <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none">View All Work</span>
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center h-full px-8 md:px-10 bg-[#f6f4d3] text-[#ff3b00] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] translate-y-full group-hover:translate-y-0" aria-hidden="true">
+                <div className="absolute inset-0 flex items-center justify-center h-full px-8 md:px-10 bg-[#FFFFFF] text-[#ff3b00] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] translate-y-full group-hover:translate-y-0" aria-hidden="true">
                   <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none">View All Work</span>
                 </div>
               </div>

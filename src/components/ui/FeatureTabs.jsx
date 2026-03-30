@@ -54,7 +54,7 @@ const FeatureTabs = () => {
             <div className="space-y-4">
               <p 
                 className="text-sm md:text-base leading-relaxed font-medium" 
-                style={{ color: '#D6D3D1' }}
+                style={{ color: '#FFFFFF' }}
               >
                 {cardData.description}
               </p>
@@ -98,13 +98,13 @@ const FeatureTabs = () => {
                 >
                   <Icon
                     className={`shrink-0 w-6 h-6 mt-0.5 transition-all duration-500 ${
-                      isActive ? 'text-accent opacity-100' : 'text-stone-300 opacity-40'
+                      isActive ? 'text-accent opacity-100' : 'text-white opacity-100'
                     }`}
                   />
                   <div className="flex flex-col gap-2 w-full">
                     <span
                       className={`text-lg md:text-xl font-bold transition-all duration-300 tracking-tight drop-shadow-sm ${
-                        isActive ? 'text-primary' : 'text-stone-300'
+                        isActive ? 'text-primary' : 'text-white'
                       }`}
                     >
                       {service.title}
@@ -118,7 +118,7 @@ const FeatureTabs = () => {
 
         {/* Right Side: Tab Panels */}
         <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
-          <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden bg-[#181616] max-h-[700px] shadow-2xl">
+          <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden bg-[#0a0a0a] max-h-[700px] shadow-2xl">
             {/* Dynamic Background Images per tab - High Contrast Grayscale to match reference */}
             {cardsData.map((data, index) => (
               <img

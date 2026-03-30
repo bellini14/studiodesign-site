@@ -51,11 +51,11 @@ const ProjectCard = ({ project, index = 0 }) => {
         </div>
         
         {/* Text Container */}
-        <div className="relative flex flex-col items-start mt-6 transition-colors duration-500 ease-out group-hover:text-[#ff3b00] text-[#F6F4D3]">
+        <div className="relative flex flex-col items-start mt-6 transition-colors duration-500 ease-out group-hover:text-[#ff3b00] text-[#FFFFFF]">
           <h3 className="text-xl md:text-[1.75rem] font-medium tracking-tight text-inherit">
             {project.title}
           </h3>
-          <div className="text-sm tracking-widest uppercase mt-2 text-inherit font-bold opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="text-sm tracking-widest uppercase mt-2 text-inherit font-bold transition-opacity duration-300">
             {project.category}
           </div>
         </div>

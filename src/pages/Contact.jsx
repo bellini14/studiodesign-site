@@ -24,12 +24,12 @@ const Contact = () => {
               
               <div>
                 <p className="text-overline font-medium text-accent uppercase tracking-widest mb-4">Address</p>
-                <p className="text-body-lg text-secondary font-normal">{CONTACT_INFO.address}</p>
+                <p className="text-body-lg text-white font-normal">{CONTACT_INFO.address}</p>
               </div>
 
               <div>
                 <p className="text-overline font-medium text-accent uppercase tracking-widest mb-4">Social</p>
-                <div className="flex gap-8 text-body-lg text-secondary font-normal">
+                <div className="flex gap-8 text-body-lg text-white font-normal">
                   <a href="#" className="hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">{CONTACT_INFO.instagram}</a>
                   <a href="#" className="hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">{CONTACT_INFO.linkedin}</a>
                 </div>
@@ -44,7 +44,7 @@ const Contact = () => {
               <h3 className="text-2xl font-medium tracking-tight mb-4">Send a message</h3>
               
               <div className="flex flex-col gap-2 group">
-                <label htmlFor="name" className="text-overline font-medium text-muted group-focus-within:text-accent uppercase tracking-widest transition-colors">Name</label>
+                <label htmlFor="name" className="text-overline font-medium text-white group-focus-within:text-accent uppercase tracking-widest transition-colors">Name</label>
                 <input 
                   type="text" 
                   id="name" 
@@ -54,7 +54,7 @@ const Contact = () => {
               </div>
               
               <div className="flex flex-col gap-2 group">
-                <label htmlFor="email" className="text-overline font-medium text-muted group-focus-within:text-accent uppercase tracking-widest transition-colors">Email</label>
+                <label htmlFor="email" className="text-overline font-medium text-white group-focus-within:text-accent uppercase tracking-widest transition-colors">Email</label>
                 <input 
                   type="email" 
                   id="email" 
@@ -64,7 +64,7 @@ const Contact = () => {
               </div>
 
               <div className="flex flex-col gap-2 group">
-                <label htmlFor="message" className="text-overline font-medium text-muted group-focus-within:text-accent uppercase tracking-widest transition-colors">Message</label>
+                <label htmlFor="message" className="text-overline font-medium text-white group-focus-within:text-accent uppercase tracking-widest transition-colors">Message</label>
                 <textarea 
                   id="message" 
                   rows="4"

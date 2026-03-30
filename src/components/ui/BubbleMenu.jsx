@@ -9,7 +9,7 @@ const DEFAULT_ITEMS = [
     href: '#',
     ariaLabel: 'Home',
     rotation: -8,
-    hoverStyles: { bgColor: '#3b82f6', textColor: '#F6F4D3' }
+    hoverStyles: { bgColor: '#3b82f6', textColor: '#FFFFFF' }
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ const DEFAULT_ITEMS = [
     href: '#',
     ariaLabel: 'Abount',
     rotation: 8,
-    hoverStyles: { bgColor: '#10b981', textColor: '#F6F4D3' }
+    hoverStyles: { bgColor: '#10b981', textColor: '#FFFFFF' }
   },
 
   {
@@ -26,7 +26,7 @@ const DEFAULT_ITEMS = [
     href: '#',
     ariaLabel: 'Services',
     rotation: 8,
-    hoverStyles: { bgColor: '#ef4444', textColor: '#F6F4D3' }
+    hoverStyles: { bgColor: '#ef4444', textColor: '#FFFFFF' }
   },
   {
     id: '4',
@@ -34,7 +34,7 @@ const DEFAULT_ITEMS = [
     href: '#',
     ariaLabel: 'Work',
     rotation: -8,
-    hoverStyles: { bgColor: '#8b5cf6', textColor: '#F6F4D3' }
+    hoverStyles: { bgColor: '#8b5cf6', textColor: '#FFFFFF' }
   }
 ];
 
@@ -44,7 +44,7 @@ export default function BubbleMenu({
   className,
   style,
   menuAriaLabel = 'Toggle menu',
-  menuBg = '#F6F4D3',
+  menuBg = '#FFFFFF',
   menuContentColor = '#111',
   useFixedPosition = false,
   items,

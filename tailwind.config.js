@@ -10,14 +10,14 @@ export default {
         sans: ['clother', 'sans-serif'],
       },
       colors: {
-        base: '#0b0b0b',
+        base: '#0a0a0a',
         surface: '#121212',
         card: '#1a1a1a',
         hover: '#232323',
         borderline: '#2c2c2c',
-        primary: '#F6F4D3',
-        secondary: '#d1d1d1',
-        muted: '#9a9a9a',
+        primary: '#FFFFFF',
+        secondary: '#FFFFFF',
+        muted: '#FFFFFF',
         accent: '#ff6a00',
       },
       fontSize: {

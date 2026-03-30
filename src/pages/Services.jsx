@@ -105,10 +105,10 @@ const ServiceOverlay = ({ service, index, total, scrollYProgress }) => {
         <div
           className="max-w-2xl w-[90%] md:w-auto mx-auto px-10 md:px-16 py-12 md:py-16 rounded-3xl flex flex-col items-center text-center"
           style={{
-            background: 'rgba(24, 22, 22, 0.65)',
+            background: 'rgba(10, 10, 10, 0.65)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(246, 244, 211, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
           {/* Service number */}
@@ -122,12 +122,12 @@ const ServiceOverlay = ({ service, index, total, scrollYProgress }) => {
           </div>
 
           {/* Title */}
-          <h2 className="text-[clamp(2rem,6vw,4.5rem)] font-medium tracking-tight text-[#F6F4D3] leading-[0.95] mb-6">
+          <h2 className="text-[clamp(2rem,6vw,4.5rem)] font-medium tracking-tight text-[#FFFFFF] leading-[0.95] mb-6">
             {service.title}
           </h2>
 
           {/* Description */}
-          <p className="text-sm md:text-base text-[#D6D3D1]/90 leading-relaxed max-w-xl mb-10">
+          <p className="text-sm md:text-base text-[#FFFFFF] leading-relaxed max-w-xl mb-10">
             {service.description}
           </p>
 
@@ -136,7 +136,7 @@ const ServiceOverlay = ({ service, index, total, scrollYProgress }) => {
             {service.capabilities.map((cap) => (
               <div key={cap} className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff3b00]" />
-                <span className="text-xs md:text-sm text-[#F6F4D3]/70 font-medium tracking-tight">
+                <span className="text-xs md:text-sm text-[#FFFFFF] font-medium tracking-tight">
                   {cap}
                 </span>
               </div>
@@ -165,7 +165,7 @@ const ProcessStep = ({ step, index }) => {
         </div>
         <span className="text-xs font-mono tracking-widest text-[#ff3b00]/50">{step.number}</span>
       </div>
-      <h3 className="text-xl md:text-2xl font-medium text-[#F6F4D3] tracking-tight mb-3">
+      <h3 className="text-xl md:text-2xl font-medium text-[#FFFFFF] tracking-tight mb-3">
         {step.title}
       </h3>
       <p className="text-sm md:text-base text-muted leading-relaxed max-w-xs">
@@ -195,7 +195,7 @@ const Services = () => {
   });
 
   return (
-    <div style={{ background: '#181616' }}>
+    <div style={{ background: '#0a0a0a' }}>
       {/* ──────────── HERO SECTION ──────────── */}
       <motion.section
         ref={heroRef}
@@ -221,7 +221,7 @@ const Services = () => {
           </div>
         </div>
 
-        <div className="absolute inset-0 bg-[#181616]/60 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#0a0a0a]/60 z-0 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
           <motion.span
@@ -236,7 +236,7 @@ const Services = () => {
           <div className="mb-8 md:mb-12 w-full">
             <ScrollRevealText
               text="Design estratégico para marcas que desejam ser memoráveis."
-              className="text-[clamp(1.5rem,4vw,3.25rem)] md:text-[clamp(1.75rem,4.5vw,4rem)] leading-[1.1] font-medium text-balance text-[#F6F4D3] inline-block text-center"
+              className="text-[clamp(1.5rem,4vw,3.25rem)] md:text-[clamp(1.75rem,4.5vw,4rem)] leading-[1.1] font-medium text-balance text-[#FFFFFF] inline-block text-center"
             />
           </div>
 
@@ -244,7 +244,7 @@ const Services = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-base md:text-lg text-[#D6D3D1]/80 max-w-2xl leading-relaxed"
+            className="text-base md:text-lg text-[#FFFFFF] max-w-2xl leading-relaxed"
           >
             Da estratégia à identidade visual, da direção criativa ao digital — cada serviço 
             é projetado para construir marcas consistentes, relevantes e duradouras.
@@ -257,7 +257,7 @@ const Services = () => {
           transition={{ delay: 1.2, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted/50">Scroll</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white">Scroll</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -307,7 +307,7 @@ const Services = () => {
             <span className="text-xs uppercase tracking-[0.2em] text-[#ff3b00] font-semibold block mb-4">
               Processo
             </span>
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-medium text-[#F6F4D3] tracking-tight leading-[1.1] max-w-xl">
+            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-medium text-[#FFFFFF] tracking-tight leading-[1.1] max-w-xl">
               Como transformamos visão em marca
             </h2>
           </motion.div>
@@ -332,7 +332,7 @@ const Services = () => {
           <span className="text-xs uppercase tracking-[0.2em] text-[#ff3b00] font-semibold mb-6">
             Pronto para começar?
           </span>
-          <h2 className="text-[clamp(1.5rem,3.5vw,3rem)] font-medium text-[#F6F4D3] tracking-tight mb-12 max-w-2xl leading-[1.15] text-balance">
+          <h2 className="text-[clamp(1.5rem,3.5vw,3rem)] font-medium text-[#FFFFFF] tracking-tight mb-12 max-w-2xl leading-[1.15] text-balance">
             Vamos criar uma marca que o mundo vai lembrar.
           </h2>
 
@@ -342,12 +342,12 @@ const Services = () => {
           >
             <div className="relative h-[60px] md:h-[70px] flex flex-col w-[240px] md:w-[280px]">
               <div className="flex items-center justify-center h-full w-full bg-transparent transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
-                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-[#F6F4D3]">
+                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-[#FFFFFF]">
                   Vamos Criar Agora
                 </span>
               </div>
               <div className="absolute inset-0 flex items-center justify-center h-full w-full bg-[#ff3b00] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] translate-y-full group-hover:translate-y-0" aria-hidden="true">
-                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-[#181616]">
+                <span className="font-semibold text-sm md:text-base tracking-widest uppercase leading-none text-[#0a0a0a]">
                   Vamos Criar Agora
                 </span>
               </div>
@@ -384,7 +384,7 @@ const ServicesSectionTitle = ({ scrollYProgress, total }) => {
         <span className="text-xs uppercase tracking-[0.2em] text-[#ff3b00] font-semibold block mb-4">
           O que fazemos
         </span>
-        <h2 className="text-[clamp(2rem,5vw,4rem)] font-medium text-[#F6F4D3] tracking-tight leading-[1.1]">
+        <h2 className="text-[clamp(2rem,5vw,4rem)] font-medium text-[#FFFFFF] tracking-tight leading-[1.1]">
           Áreas de Expertise
         </h2>
       </div>

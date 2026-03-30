@@ -118,7 +118,7 @@ const Footer = () => {
         {/* Center Huge Text */}
         <div className="absolute inset-0 pointer-events-none w-full h-full flex justify-center items-center z-0">
           <h2 
-            className="text-[12vw] leading-none text-[#FF3B00] whitespace-nowrap opacity-90 drop-shadow-md menu-logo-text flex"
+            className="text-[12vw] leading-none text-[#FF3B00] whitespace-nowrap drop-shadow-md menu-logo-text flex"
             style={{ letterSpacing: '-0.02em' }}
           >
             {"studiodesign".split("").map((letter, index) => (
@@ -149,13 +149,13 @@ const Footer = () => {
                 <Mail className="w-3.5 h-3.5 text-muted group-hover:text-accent transition-colors" strokeWidth={1.5} />
                 {CONTACT_INFO.email}
               </a>
-              <span className="inline-flex items-center gap-2 text-muted text-sm">
+              <span className="inline-flex items-center gap-2 text-white text-sm">
                 <MapPin className="w-3.5 h-3.5" strokeWidth={1.5} />
                 {CONTACT_INFO.address}
               </span>
             </div>
             {/* Copyright */}
-            <div className="flex items-center gap-3 text-muted/60 text-xs tracking-wide">
+            <div className="flex items-center gap-3 text-white text-xs tracking-wide">
               <span>© {new Date().getFullYear()} Studio Design</span>
               <span className="w-1 h-1 rounded-full bg-muted/40"></span>
               <span>Built with precision</span>
@@ -164,7 +164,7 @@ const Footer = () => {
           
           {/* Bottom Right — Social Icons */}
           <div className="flex flex-col items-start md:items-end gap-4">
-            <span className="text-xs font-semibold text-muted uppercase tracking-[0.2em]">
+            <span className="text-xs font-semibold text-white uppercase tracking-[0.2em]">
               Follow us
             </span>
             <div className="flex items-center gap-3">

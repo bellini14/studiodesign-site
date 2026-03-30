@@ -16,45 +16,46 @@ const items = [
     href: "/",
     ariaLabel: "Home",
     rotation: -8,
-    hoverStyles: { bgColor: "#ff3b00", textColor: "#f6f4d3" }
+    hoverStyles: { bgColor: "#ff3b00", textColor: "#FFFFFF" }
   },
   {
     label: "about",
     href: "/about",
     ariaLabel: "About",
     rotation: 8,
-    hoverStyles: { bgColor: "#ff3b00", textColor: "#f6f4d3" }
+    hoverStyles: { bgColor: "#ff3b00", textColor: "#FFFFFF" }
   },
   {
     label: "serviços",
     href: "/services",
     ariaLabel: "Serviços",
     rotation: 8,
-    hoverStyles: { bgColor: "#ff3b00", textColor: "#f6f4d3" }
+    hoverStyles: { bgColor: "#ff3b00", textColor: "#FFFFFF" }
   },
   {
     label: "portfólio",
     href: "/portfolio",
     ariaLabel: "Portfólio",
     rotation: -8,
-    hoverStyles: { bgColor: "#ff3b00", textColor: "#f6f4d3" }
+    hoverStyles: { bgColor: "#ff3b00", textColor: "#FFFFFF" }
   },
   {
     label: "contato",
     href: "/contact",
     ariaLabel: "Contato",
     rotation: 8,
-    hoverStyles: { bgColor: "#ff3b00", textColor: "#f6f4d3" }
+    hoverStyles: { bgColor: "#ff3b00", textColor: "#FFFFFF" }
   }
 ];
 
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 2.0,
+      duration: 1.1,
       easing: (t) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1.1,
+      touchMultiplier: 2,
     });
 
     function raf(time) {
@@ -76,7 +77,7 @@ function App() {
               <span className="menu-logo-text" style={{
                 fontWeight: 300,
                 fontStyle: 'normal',
-                color: '#f6f4d3',
+                color: '#FFFFFF',
                 letterSpacing: '-0.02em',
                 fontSize: '2.5rem'
               }}>studiodesign</span>
@@ -84,8 +85,8 @@ function App() {
           }
           items={items}
           menuAriaLabel="Toggle navigation"
-          menuBg="#f6f4d3"
-          menuContentColor="#181616"
+          menuBg="#FFFFFF"
+          menuContentColor="#0a0a0a"
           useFixedPosition={true}
           animationEase="back.out(1.5)"
           animationDuration={0.5}
