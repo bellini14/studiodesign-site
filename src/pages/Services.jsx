@@ -12,20 +12,26 @@ const PROCESS_STEPS = [
   {
     icon: Search,
     number: "01",
-    title: "Imersão",
-    desc: "Entendemos profundamente o contexto, público e objetivos para criar a base estratégica do projeto."
+    title: "Imersão & Estratégia",
+    desc: "Entendemos profundamente o contexto, público e objetivos para criar a base estratégica estrutural."
+  },
+  {
+    icon: Palette,
+    number: "02",
+    title: "Design de Identidade",
+    desc: "Exploramos conceitos visuais até encontrar a expressão perfeita e autêntica da sua marca no mercado."
   },
   {
     icon: Layers,
-    number: "02",
-    title: "Criação",
-    desc: "Traduzimos estratégia em linguagem visual — explorando conceitos até encontrar a expressão ideal da marca."
+    number: "03",
+    title: "Sistemas & Aplicações",
+    desc: "Expandimos a identidade para um sistema versátil, pronto para os mais variados pontos de contato."
   },
   {
     icon: Rocket,
-    number: "03",
-    title: "Entrega",
-    desc: "Refinamos cada detalhe e entregamos um sistema visual completo, pronto para viver em todos os pontos de contato."
+    number: "04",
+    title: "Entrega & Direcionamento",
+    desc: "Refinamos e entregamos o projeto finalizado com precisão para viver no mundo real."
   },
 ];
 
@@ -41,7 +47,7 @@ const ServiceOverlay = ({ service, index, total, scrollYProgress }) => {
 
   // Each service gets an equal slice of total scroll progress
   const segmentSize = 1 / (total + 1);
-  const start = (index + 1) * segmentSize;
+  const start = index === 0 ? segmentSize * 0.4 : (index + 1) * segmentSize;
   // Slower, more gradual growth: takes ~70% of the segment to fully expand → ~5% per scroll tick
   const growEnd = start + segmentSize * 0.7;
 
@@ -148,30 +154,34 @@ const ServiceOverlay = ({ service, index, total, scrollYProgress }) => {
   );
 };
 
-/* ─── Process Step ─── */
-const ProcessStep = ({ step, index }) => {
-  const Icon = step.icon;
+/* ─── Infinite Marquee Column for Process Section ─── */
+const MarqueeColumn = ({ images, reverse = false }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.7, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col items-start group"
-    >
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#ff3b00]/8 border border-[#ff3b00]/15 flex items-center justify-center group-hover:bg-[#ff3b00]/15 group-hover:border-[#ff3b00]/30 transition-all duration-500">
-          <Icon className="w-6 h-6 md:w-7 md:h-7 text-[#ff3b00]" strokeWidth={1.5} />
-        </div>
-        <span className="text-xs font-mono tracking-widest text-[#ff3b00]/50">{step.number}</span>
-      </div>
-      <h3 className="text-xl md:text-2xl font-medium text-[#FFFFFF] tracking-tight mb-3">
-        {step.title}
-      </h3>
-      <p className="text-sm md:text-base text-muted leading-relaxed max-w-xs">
-        {step.desc}
-      </p>
-    </motion.div>
+    <div className="relative overflow-hidden h-full w-full flex flex-col pt-4">
+      <motion.div
+        className="flex flex-col gap-4 w-full"
+        animate={{
+          y: reverse ? ["-50%", "0%"] : ["0%", "-50%"],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "linear",
+          repeatType: "loop"
+        }}
+      >
+        {[...images, ...images].map((src, i) => (
+          <div key={i} className="w-full pt-[100%] relative rounded-xl bg-[#0a0a0a] border border-[#ff3b00]/10 overflow-hidden shrink-0">
+            <img 
+              alt="Process detail" 
+              className="absolute inset-0 w-full h-full object-cover grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-500" 
+              src={src} 
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
   );
 };
 
@@ -295,27 +305,83 @@ const Services = () => {
       </div>
 
       {/* ──────────── PROCESS SECTION ──────────── */}
-      <section className="w-full bg-surface border-y border-borderline/50">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="mb-16 md:mb-20"
-          >
-            <span className="text-xs uppercase tracking-[0.2em] text-[#ff3b00] font-semibold block mb-4">
-              Processo
-            </span>
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-medium text-[#FFFFFF] tracking-tight leading-[1.1] max-w-xl">
-              Como transformamos visão em marca
-            </h2>
-          </motion.div>
+      <section className="w-full bg-[#0a0a0a] border-y border-borderline/50 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-2 flex flex-col">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="mb-12 md:mb-16"
+              >
+                <span className="text-xs uppercase tracking-[0.2em] text-[#ff3b00] font-semibold block mb-4">
+                  Processo
+                </span>
+                <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium text-[#FFFFFF] tracking-tight leading-[1.1] mb-6">
+                  Como transformamos visão em marca
+                </h2>
+                <p className="text-base sm:text-lg text-[#FFFFFF]/60 max-w-2xl">
+                  Mergulhamos na essência do seu negócio para criar identidades autênticas, combinando estratégia profunda e design impecável em cada etapa do nosso método.
+                </p>
+              </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-            {PROCESS_STEPS.map((step, idx) => (
-              <ProcessStep key={step.number} step={step} index={idx} />
-            ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                {PROCESS_STEPS.map((step, idx) => {
+                  const Icon = step.icon;
+                  return (
+                    <motion.div 
+                      key={step.number}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      className="flex items-start gap-4"
+                    >
+                      <div className="shrink-0 w-12 h-12 rounded-xl border border-[#ff3b00]/15 bg-[#ff3b00]/5 flex items-center justify-center shadow-lg">
+                        <Icon className="w-6 h-6 text-[#ff3b00]" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <h3 className="text-sm sm:text-lg font-medium text-[#FFFFFF] tracking-tight mb-2">
+                          {step.title}
+                        </h3>
+                        <p className="text-sm text-[#FFFFFF]/50 leading-relaxed max-w-[30ch]">
+                          {step.desc}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="lg:col-span-1 relative h-[400px] lg:h-[700px] mt-10 lg:mt-0 xl:ml-8">
+              <div className="grid grid-cols-2 gap-4 h-full relative overflow-hidden rounded-2xl">
+                <div className="absolute inset-0 pointer-events-none z-10 block">
+                  <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0a0a] to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent"></div>
+                </div>
+                
+                <MarqueeColumn 
+                  images={[
+                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?q=80&w=2000&auto=format&fit=crop"
+                  ]}
+                />
+                <MarqueeColumn 
+                  images={[
+                    "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop"
+                  ]}
+                  reverse={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -366,7 +432,7 @@ const ServicesSectionTitle = ({ scrollYProgress, total }) => {
   // Visible in the first segment, fades when first card starts growing
   const opacity = useTransform(
     scrollYProgress,
-    [0, segmentSize * 0.1, segmentSize * 0.7, segmentSize * 0.95],
+    [0, segmentSize * 0.1, segmentSize * 0.3, segmentSize * 0.5],
     [0, 1, 1, 0]
   );
   const y = useTransform(
