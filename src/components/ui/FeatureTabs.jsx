@@ -1,6 +1,46 @@
 import React, { useState } from 'react';
 import { Sparkles, Palette, Compass, Monitor } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { SERVICES } from '../../data/content';
+
+const sectionVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.09,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const visualVariants = {
+  hidden: {
+    opacity: 0,
+    y: 44,
+    scale: 0.975,
+    clipPath: 'inset(14% 0 0 0 round 28px)',
+    filter: 'blur(10px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    clipPath: 'inset(0% 0 0 0 round 28px)',
+    filter: 'blur(0px)',
+    transition: { duration: 0.95, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 const FeatureTabs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -37,102 +77,104 @@ const FeatureTabs = () => {
     const isPast = activeIndex > index;
     
     return (
-      <div className="absolute w-full max-w-[340px] md:max-w-md mx-auto pointer-events-auto transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      <div className="absolute w-[min(82%,420px)] mx-auto pointer-events-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
            style={{
-             transform: isActive ? 'translateY(0) scale(1)' : isPast ? 'translateY(-100%) scale(0.95)' : 'translateY(100%) scale(0.95)',
+             transform: isActive ? 'translateY(0) scale(1)' : isPast ? 'translateY(-28px) scale(0.98)' : 'translateY(28px) scale(0.98)',
              opacity: isActive ? 1 : 0,
-             visibility: isActive ? 'visible' : 'hidden', // Ensures invisible cards don't block hovering/clicking
+             visibility: isActive ? 'visible' : 'hidden',
              zIndex: isActive ? 20 : 0
            }}>
         
-        {/* Strictly rendering the card with the beige and orange colors as required by the user */}
-        <div className="bg-[#0a0a0a]/95 backdrop-blur-xl rounded-2xl p-1.5 shadow-2xl border border-primary/10 ring-1 ring-black/50">
-          <div className="bg-[#111111] rounded-xl p-6 md:p-8">
-            <h3 className="text-xl md:text-2xl font-bold text-primary mb-6 tracking-tight drop-shadow-md">
+        <div className="rounded-[18px] border border-[#d9d0c3] bg-[#fffaf3] p-6 md:p-8 shadow-[0_20px_60px_rgba(20,17,15,0.12)]">
+            <h3 className="text-xl md:text-2xl font-semibold !text-[#14110f] mb-5 tracking-normal leading-tight">
               {cardData.cardTitle}
             </h3>
-            <div className="space-y-4">
-              <p 
-                className="text-sm md:text-base leading-relaxed font-medium" 
-                style={{ color: '#FFFFFF' }}
-              >
+            <div>
+              <p className="text-sm md:text-base leading-relaxed font-normal !text-[#4f4942]">
                 {cardData.description}
               </p>
             </div>
-          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+    <motion.div
+      className="feature-tabs-copy site-gutter-menu w-full py-24 md:py-32"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+      variants={sectionVariants}
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14 lg:gap-20 items-center">
         {/* Left Side: Buttons and Text */}
         <div className="flex flex-col lg:pr-8 xl:pr-12">
-          <div className="mb-8 md:mb-12">
-            <span className="text-overline uppercase tracking-widest text-accent mb-6 block font-bold">
+          <motion.div variants={itemVariants} className="mb-8 md:mb-11">
+            <span className="text-xs uppercase tracking-[0.18em] text-accent mb-5 block font-semibold">
               Capabilities
             </span>
-            <h2 className="text-h2 md:text-[clamp(2.5rem,4vw,3.5rem)] font-bold leading-[1.1] text-primary tracking-tight mb-8">
+            <h2 className="text-[clamp(2.65rem,4.5vw,4.2rem)] font-semibold leading-[0.98] text-primary tracking-normal mb-7">
               Expertise
             </h2>
-            <p className="text-base md:text-lg text-white max-w-xl text-balance font-medium">
+            <p className="text-base md:text-lg text-secondary max-w-[56ch] leading-relaxed font-normal">
               A comprehensive suite of design and digital services crafted for visionary founders and institutions seeking aesthetic refinement.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="w-full h-px bg-primary/10 mb-8"></div>
+          <motion.div variants={itemVariants} className="w-full h-px bg-borderline mb-4"></motion.div>
 
-          <div className="space-y-4">
+          <motion.div variants={sectionVariants} className="divide-y divide-borderline/70">
             {SERVICES.map((service, index) => {
               const Icon = ICONS[index % ICONS.length];
               const isActive = activeIndex === index;
               return (
-                <button
+                <motion.button
                   key={service.id}
+                  variants={itemVariants}
                   onClick={() => setActiveIndex(index)}
-                  className={`w-full text-left flex items-start gap-5 py-5 px-6 rounded-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    isActive ? 'bg-card border border-primary/10 shadow-lg scale-[1.02]' : 'hover:bg-card/40 bg-transparent border border-transparent scale-100'
+                  className={`group w-full text-left grid grid-cols-[2.25rem_1fr_auto] items-center gap-4 py-5 transition-all duration-300 ease-out ${
+                    isActive ? 'text-primary' : 'text-secondary hover:text-primary'
                   }`}
                 >
-                  <Icon
-                    className={`shrink-0 w-6 h-6 mt-0.5 transition-all duration-500 ${
-                      isActive ? 'text-accent opacity-100' : 'text-white opacity-100'
-                    }`}
-                  />
-                  <div className="flex flex-col gap-2 w-full">
-                    <span
-                      className={`text-lg md:text-xl font-bold transition-all duration-300 tracking-tight drop-shadow-sm ${
-                        isActive ? 'text-primary' : 'text-white'
-                      }`}
-                    >
+                  <span className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 ${
+                    isActive ? 'bg-accent text-white' : 'bg-transparent text-muted group-hover:text-accent'
+                  }`}>
+                    <Icon className="w-[18px] h-[18px]" strokeWidth={1.6} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-lg md:text-xl font-semibold leading-tight tracking-normal whitespace-normal break-words">
                       {service.title}
                     </span>
-                  </div>
-                </button>
+                  </span>
+                  <span className={`h-px w-8 transition-all duration-300 ${
+                    isActive ? 'bg-accent' : 'bg-borderline group-hover:bg-accent/60'
+                  }`} />
+                </motion.button>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Side: Tab Panels */}
-        <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
-          <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden bg-[#0a0a0a] max-h-[700px] shadow-2xl">
-            {/* Dynamic Background Images per tab - High Contrast Grayscale to match reference */}
+        <motion.div variants={visualVariants} className="relative w-full h-full min-h-[440px] md:min-h-[560px] flex items-center justify-center">
+          <div className="relative w-full aspect-[4/5] md:aspect-[16/13] lg:aspect-[4/5] rounded-[28px] overflow-hidden bg-hover max-h-[720px] shadow-[0_24px_80px_rgba(20,17,15,0.12)]">
+            {/* Dynamic background images kept light to match the site theme */}
             {cardsData.map((data, index) => (
               <img
                 key={`bg-${index}`}
                 alt={data.cardTitle}
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] filter grayscale ${
-                  activeIndex === index ? 'opacity-100 scale-100' : activeIndex > index ? 'opacity-0 scale-105 blur-lg -translate-y-8' : 'opacity-0 scale-105 blur-lg translate-y-8'
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] grayscale brightness-[1.05] contrast-[0.94] saturate-[0.75] ${
+                  activeIndex === index ? 'opacity-100 scale-100' : activeIndex > index ? 'opacity-0 scale-[1.03] blur-md -translate-y-5' : 'opacity-0 scale-[1.03] blur-md translate-y-5'
                 }`}
                 src={data.image}
               />
             ))}
+            <div className="absolute inset-0 bg-[#14110f]/10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#14110f]/18 via-transparent to-[#fffaf3]/15 pointer-events-none" />
             
             {/* Absolute container that safely stacks all cards ensuring completely solid DOM flow */}
-            <div className="absolute inset-0 flex items-center justify-center p-6 md:p-10 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center p-5 md:p-10 pointer-events-none overflow-hidden">
               {cardsData.map((data, index) => (
                 <React.Fragment key={`card-${index}`}>
                   {generateCard(data, index)}
@@ -140,9 +182,9 @@ const FeatureTabs = () => {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

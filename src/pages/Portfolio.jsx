@@ -8,17 +8,17 @@ const Portfolio = () => {
 
 
   return (
-    <div className="bg-base min-h-screen text-[#FFFFFF]">
+    <div className="bg-base min-h-screen text-primary">
       {/* Header - Alinhado à mesma métrica de padding do menu (px-8) */}
       <section className="pt-40 pb-20 w-full flex justify-center">
-        <div className="max-w-7xl w-full mx-auto px-6 md:px-12 flex flex-col items-center justify-center text-center">
+        <div className="site-shell flex flex-col items-center justify-center text-center">
           <span className="text-[#ff3b00] text-[0.75rem] font-semibold tracking-[0.2em] uppercase block mb-6">
             Portfólio • {total} projetos
           </span>
           <SplitText
             text="Our Work"
             textAlign="center"
-            className="text-[clamp(3.5rem,8vw,7.5rem)] font-semibold tracking-[-0.03em] m-0 leading-none text-[#FFFFFF]"
+            className="text-[clamp(3.5rem,8vw,7.5rem)] font-semibold tracking-[-0.03em] m-0 leading-none text-primary"
             delay={20}
             duration={1.2}
             ease="power3.out"
@@ -34,7 +34,7 @@ const Portfolio = () => {
       {/* Galeria Editorial em Grid Plano
           A ausência do "grid horizontal" antigo libera as colunas para o comportamento em escada puro. */}
       <section className="w-full pb-40 flex justify-center">
-        <div className="max-w-7xl w-full px-6 md:px-12">
+        <div className="site-shell">
           <div className="relative mt-12 grid grid-cols-1 md:grid-cols-3 gap-x-[35px] gap-y-[50px] md:gap-y-[115px] w-full">
             {PORTFOLIO_PROJECTS.map((project, idx) => (
               <ProjectCard key={project.id} project={project} index={idx} />

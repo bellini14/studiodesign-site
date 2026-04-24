@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { CONTACT_INFO, NAV_LINKS } from '../../data/content';
-import { ArrowUpRight, Instagram, Linkedin, Mail, MapPin, ChevronDown } from 'lucide-react';
+import { CONTACT_INFO } from '../../data/content';
+import { ArrowUpRight, Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
 import Mosaic from '../backgrounds/Mosaic';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { cn } from '../../lib/utils';
 
 const AnimatedLetter = ({ letter, index, scrollYProgress }) => {
   const y = useTransform(scrollYProgress, [0, 1], [150 + (index * 40), 0]);
@@ -29,16 +30,23 @@ const SocialIcon = ({ href, icon: Icon, label }) => (
   </a>
 );
 
-const Footer = () => {
+const Footer = ({ className = '', revealTargetRef }) => {
   const containerRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: revealTargetRef || containerRef,
     offset: ["start end", "end end"]
   });
+  const revealY = useTransform(scrollYProgress, [0, 1], ['22vh', '0vh']);
 
   return (
-    <footer ref={containerRef} className="relative w-full min-h-[600px] md:min-h-[800px] min-h-screen bg-surface text-primary border-t border-borderline/50 overflow-hidden flex flex-col p-6 md:p-12">
+    <motion.footer
+      ref={containerRef}
+      style={{ y: revealY }}
+      className={cn(
+        'site-gutter-menu relative flex h-screen min-h-screen w-full flex-col overflow-hidden border-t border-borderline/50 bg-surface py-6 text-primary will-change-transform lg:py-12',
+        className
+      )}
+    >
       <Mosaic className="z-0" />
 
       {/* Content Container */}
@@ -50,69 +58,21 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row justify-between items-start w-full pointer-events-auto"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center w-full pointer-events-auto"
         >
           {/* CTA - Start a project */}
           <div className="w-full md:w-auto">
-            <Link to="/contact" className="group inline-flex items-center gap-5">
-              <span className="text-3xl md:text-4xl lg:text-5xl font-light tracking-tight text-primary group-hover:text-accent transition-colors duration-500">
+            <Link to="/contact" className="group inline-flex min-h-[2.75rem] items-center gap-4">
+              <span className="text-3xl md:text-4xl lg:text-5xl font-light leading-none tracking-tight text-primary group-hover:text-accent transition-colors duration-500">
                 Start a project
               </span>
-              <div className="w-11 h-11 md:w-14 md:h-14 rounded-full border border-borderline/50 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all duration-500">
-                <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:text-surface group-hover:rotate-45 transition-all duration-500" strokeWidth={1.5} />
+              <div className="w-11 h-11 rounded-full border border-borderline/50 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all duration-500">
+                <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-primary group-hover:text-white group-hover:rotate-45 transition-all duration-500" strokeWidth={1.5} />
               </div>
             </Link>
           </div>
           
-          {/* Interactive Navigation Menu */}
-          <div className="mt-10 md:mt-0">
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-3 cursor-pointer group"
-            >
-              <span className="text-xs font-semibold text-muted uppercase tracking-[0.2em] group-hover:text-primary transition-colors duration-300">
-                Menu
-              </span>
-              <motion.div 
-                animate={{ rotate: isMenuOpen ? 180 : 0 }} 
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <ChevronDown className="w-4 h-4 text-accent" strokeWidth={2} />
-              </motion.div>
-            </button>
-            
-            <AnimatePresence>
-              {isMenuOpen && (
-                <motion.nav 
-                  initial={{ opacity: 0, height: 0, y: -8 }}
-                  animate={{ opacity: 1, height: 'auto', y: 0 }}
-                  exit={{ opacity: 0, height: 0, y: -8 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden mt-5"
-                >
-                  <div className="flex flex-col gap-1 pl-1 border-l border-borderline/40">
-                    {NAV_LINKS.map((link, i) => (
-                      <motion.div 
-                        key={link.name}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -12 }}
-                        transition={{ delay: i * 0.06, duration: 0.3 }}
-                      >
-                        <Link 
-                          to={link.path} 
-                          className="block pl-4 py-[6px] text-secondary hover:text-accent text-sm font-medium transition-all duration-300 hover:pl-6 relative group"
-                        >
-                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-[1px] bg-accent group-hover:w-3 transition-all duration-300"></span>
-                          {link.name}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.nav>
-              )}
-            </AnimatePresence>
-          </div>
+          <div className="hidden md:block" aria-hidden="true" />
         </motion.div>
 
         {/* Center Huge Text */}
@@ -149,13 +109,13 @@ const Footer = () => {
                 <Mail className="w-3.5 h-3.5 text-muted group-hover:text-accent transition-colors" strokeWidth={1.5} />
                 {CONTACT_INFO.email}
               </a>
-              <span className="inline-flex items-center gap-2 text-white text-sm">
+              <span className="inline-flex items-center gap-2 text-secondary text-sm">
                 <MapPin className="w-3.5 h-3.5" strokeWidth={1.5} />
                 {CONTACT_INFO.address}
               </span>
             </div>
             {/* Copyright */}
-            <div className="flex items-center gap-3 text-white text-xs tracking-wide">
+            <div className="flex items-center gap-3 text-muted text-xs tracking-wide">
               <span>© {new Date().getFullYear()} Studio Design</span>
               <span className="w-1 h-1 rounded-full bg-muted/40"></span>
               <span>Built with precision</span>
@@ -164,7 +124,7 @@ const Footer = () => {
           
           {/* Bottom Right — Social Icons */}
           <div className="flex flex-col items-start md:items-end gap-4">
-            <span className="text-xs font-semibold text-white uppercase tracking-[0.2em]">
+            <span className="text-xs font-semibold text-muted uppercase tracking-[0.2em]">
               Follow us
             </span>
             <div className="flex items-center gap-3">
@@ -184,7 +144,7 @@ const Footer = () => {
         </motion.div>
         
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

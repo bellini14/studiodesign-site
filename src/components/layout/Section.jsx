@@ -1,7 +1,7 @@
 const Section = ({ 
   children, 
   className = "", 
-  containerClass = "max-w-7xl w-full px-6 md:px-12",
+  containerClass = "site-shell",
   id,
   py = "py-24 md:py-32" // Refined default, but pages will override this for rhythm
 }) => {

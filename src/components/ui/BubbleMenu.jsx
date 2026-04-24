@@ -363,9 +363,9 @@ export default function BubbleMenu({
         </button>
       </nav>
 
-      {/* Dark background overlay */}
+      {/* Light background overlay */}
       <div 
-        className={`fixed inset-0 bg-black/60 z-[999] transition-opacity duration-300 ease-in-out ${
+        className={`fixed inset-0 bg-[#f7f3ec]/85 backdrop-blur-sm z-[999] transition-opacity duration-300 ease-in-out ${
           isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         aria-hidden="true"

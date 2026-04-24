@@ -54,6 +54,12 @@ class ImageItem {
   private getRect() {
     this.rect = this.DOM.el.getBoundingClientRect();
   }
+
+  public destroy() {
+    window.removeEventListener('resize', this.resize);
+    gsap.killTweensOf(this.DOM.el);
+    gsap.killTweensOf(this.DOM.inner);
+  }
 }
 
 class ImageTrailVariant1 {
@@ -69,6 +75,10 @@ class ImageTrailVariant1 {
   private mousePos: { x: number; y: number };
   private lastMousePos: { x: number; y: number };
   private cacheMousePos: { x: number; y: number };
+  private animationFrameId: number | null;
+  private isDestroyed: boolean;
+  private handlePointerMove: (ev: MouseEvent | TouchEvent) => void;
+  private initRender: (ev: MouseEvent | TouchEvent) => void;
 
   constructor(container: HTMLDivElement) {
     this.container = container;
@@ -83,27 +93,31 @@ class ImageTrailVariant1 {
     this.mousePos = { x: 0, y: 0 };
     this.lastMousePos = { x: 0, y: 0 };
     this.cacheMousePos = { x: 0, y: 0 };
+    this.animationFrameId = null;
+    this.isDestroyed = false;
 
-    const handlePointerMove = (ev: MouseEvent | TouchEvent) => {
+    this.handlePointerMove = (ev: MouseEvent | TouchEvent) => {
       const rect = this.container.getBoundingClientRect();
       this.mousePos = getLocalPointerPos(ev, rect);
     };
-    container.addEventListener('mousemove', handlePointerMove);
-    container.addEventListener('touchmove', handlePointerMove);
+    container.addEventListener('mousemove', this.handlePointerMove);
+    container.addEventListener('touchmove', this.handlePointerMove);
 
-    const initRender = (ev: MouseEvent | TouchEvent) => {
+    this.initRender = (ev: MouseEvent | TouchEvent) => {
       const rect = this.container.getBoundingClientRect();
       this.mousePos = getLocalPointerPos(ev, rect);
       this.cacheMousePos = { ...this.mousePos };
-      requestAnimationFrame(() => this.render());
-      container.removeEventListener('mousemove', initRender as EventListener);
-      container.removeEventListener('touchmove', initRender as EventListener);
+      this.animationFrameId = requestAnimationFrame(() => this.render());
+      container.removeEventListener('mousemove', this.initRender as EventListener);
+      container.removeEventListener('touchmove', this.initRender as EventListener);
     };
-    container.addEventListener('mousemove', initRender as EventListener);
-    container.addEventListener('touchmove', initRender as EventListener);
+    container.addEventListener('mousemove', this.initRender as EventListener);
+    container.addEventListener('touchmove', this.initRender as EventListener);
   }
 
   private render() {
+    if (this.isDestroyed) return;
+
     const distance = getMouseDistance(this.mousePos, this.lastMousePos);
     this.cacheMousePos.x = lerp(this.cacheMousePos.x, this.mousePos.x, 0.1);
     this.cacheMousePos.y = lerp(this.cacheMousePos.y, this.mousePos.y, 0.1);
@@ -115,7 +129,7 @@ class ImageTrailVariant1 {
     if (this.isIdle && this.zIndexVal !== 1) {
       this.zIndexVal = 1;
     }
-    requestAnimationFrame(() => this.render());
+    this.animationFrameId = requestAnimationFrame(() => this.render());
   }
 
   private showNextImage() {
@@ -168,6 +182,20 @@ class ImageTrailVariant1 {
     if (this.activeImagesCount === 0) {
       this.isIdle = true;
     }
+  }
+
+  public destroy() {
+    this.isDestroyed = true;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+
+    this.container.removeEventListener('mousemove', this.handlePointerMove);
+    this.container.removeEventListener('touchmove', this.handlePointerMove);
+    this.container.removeEventListener('mousemove', this.initRender as EventListener);
+    this.container.removeEventListener('touchmove', this.initRender as EventListener);
+    this.images.forEach(image => image.destroy());
   }
 }
 
@@ -1194,15 +1222,18 @@ export default function ImageTrail({ items = [], variant = 1 }: ImageTrailProps)
   useEffect(() => {
     if (!containerRef.current) return;
     const Cls = variantMap[variant] || variantMap[1];
-    new Cls(containerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const trail = new Cls(containerRef.current) as unknown as { destroy?: () => void };
+
+    return () => {
+      trail.destroy?.();
+    };
   }, [variant, items]);
 
   return (
-    <div className="w-full h-full relative z-[0] rounded-lg bg-transparent overflow-visible" ref={containerRef}>
+    <div className="w-full h-full relative z-[100] rounded-lg bg-transparent overflow-visible" ref={containerRef}>
       {items.map((url, i) => (
         <div
-          className="content__img w-[190px] aspect-[1.1] rounded-[15px] absolute top-0 left-0 opacity-0 overflow-hidden [will-change:transform,filter] pointer-events-none"
+          className="content__img w-[190px] aspect-[1.1] rounded-[15px] absolute top-0 left-0 opacity-0 overflow-hidden [will-change:transform,filter]"
           key={i}
         >
           <div

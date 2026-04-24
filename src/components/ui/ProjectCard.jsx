@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const aspectPatterns = [
   'aspect-[4/5]',  // aspect-small (New Engen)
@@ -12,27 +12,18 @@ const aspectPatterns = [
 
 const ProjectCard = ({ project, index = 0 }) => {
   const ratioClass = aspectPatterns[index % aspectPatterns.length];
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        observer.unobserve(entry.target);
-      }
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-    if (cardRef.current) observer.observe(cardRef.current);
-    
-    return () => observer.disconnect();
-  }, []);
 
   return (
-    <article 
-      ref={cardRef} 
-      className={`case-item col-span-1 relative w-full transition-all duration-[1000ms] ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-      style={{ transitionDelay: `${(index % 3) * 100}ms` }}
+    <motion.article
+      className="case-item col-span-1 relative w-full"
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.08,
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
       <Link to={`/work/${project.id || project.slug}`} className="group flex flex-col w-full">
         
@@ -51,7 +42,7 @@ const ProjectCard = ({ project, index = 0 }) => {
         </div>
         
         {/* Text Container */}
-        <div className="relative flex flex-col items-start mt-6 transition-colors duration-500 ease-out group-hover:text-[#ff3b00] text-[#FFFFFF]">
+        <div className="relative flex flex-col items-start mt-6 transition-colors duration-500 ease-out group-hover:text-[#ff3b00] text-primary">
           <h3 className="text-xl md:text-[1.75rem] font-medium tracking-tight text-inherit">
             {project.title}
           </h3>
@@ -61,7 +52,7 @@ const ProjectCard = ({ project, index = 0 }) => {
         </div>
 
       </Link>
-    </article>
+    </motion.article>
   );
 };
 

@@ -16,3 +16,6 @@ catch.mjs
 out.js
 clean-error.txt
 .agents/
+
+.vercel
+.env*.local

@@ -34,13 +34,15 @@ const TextPressure = ({
   flex = true,
   stroke = false,
   scale = false,
-  textColor = '#FFFFFF',
+  textColor = '#14110f',
   strokeColor = '#ff3b00',
   strokeWidth = 2,
   className = '',
   minFontSize = 24,
   uppercase = false,
   center = true,
+  lineGap = 0,
+  fontScale = 1,
 }) => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
@@ -53,7 +55,8 @@ const TextPressure = ({
   const [scaleY, setScaleY] = useState(1);
   const [lineHeight, setLineHeight] = useState(1);
 
-  const chars = text.split('');
+  const chars = text.replace(/\n/g, '').split('');
+  const lines = text.split('\n');
 
   useEffect(() => {
     const handleMouseMove = e => {
@@ -88,7 +91,7 @@ const TextPressure = ({
 
     const { width: containerW, height: containerH } = containerRef.current.getBoundingClientRect();
 
-    let newFontSize = containerW / (chars.length / 2);
+    let newFontSize = (containerW / (chars.length / 2)) * fontScale;
     newFontSize = Math.max(newFontSize, minFontSize);
 
     setFontSize(newFontSize);
@@ -105,7 +108,7 @@ const TextPressure = ({
         setLineHeight(yRatio);
       }
     });
-  }, [chars.length, minFontSize, scale]);
+  }, [chars.length, fontScale, minFontSize, scale]);
 
   useEffect(() => {
     const debouncedSetSize = debounce(setSize, 100);
@@ -196,6 +199,7 @@ const TextPressure = ({
           fontFamily,
           fontSize: fontSize,
           lineHeight,
+          rowGap: lines.length > 1 ? `${lineGap}em` : undefined,
           transform: `scale(1, ${scaleY})`,
           transformOrigin: 'center top',
           margin: 2,
@@ -205,30 +209,41 @@ const TextPressure = ({
         }}
       >
         {(() => {
-          const words = text.split(' ');
           let charIndex = 0;
-          return words.map((word, wIdx) => (
-            <span
-              key={wIdx}
-              className="inline-flex"
-              style={{ whiteSpace: 'nowrap', marginRight: wIdx < words.length - 1 ? '0.25em' : 0 }}
-            >
-              {word.split('').map((char, cIdx) => {
-                const idx = charIndex++;
-                return (
+          return lines.map((line, lineIdx) => {
+            const words = line.split(' ');
+
+            return (
+              <span
+                key={lineIdx}
+                className="flex w-full justify-center"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {words.map((word, wIdx) => (
                   <span
-                    key={idx}
-                    ref={el => { spansRef.current[idx] = el; }}
-                    data-char={char}
-                    className="inline-block"
+                    key={`${lineIdx}-${wIdx}`}
+                    className="inline-flex"
+                    style={{ whiteSpace: 'nowrap', marginRight: wIdx < words.length - 1 ? '0.25em' : 0 }}
                   >
-                    {char}
+                    {word.split('').map(char => {
+                      const idx = charIndex++;
+                      return (
+                        <span
+                          key={idx}
+                          ref={el => { spansRef.current[idx] = el; }}
+                          data-char={char}
+                          className="inline-block"
+                        >
+                          {char}
+                        </span>
+                      );
+                    })}
+                    {wIdx < words.length - 1 && (() => { charIndex++; return null; })()}
                   </span>
-                );
-              })}
-              {wIdx < words.length - 1 && (() => { charIndex++; return null; })()}
-            </span>
-          ));
+                ))}
+              </span>
+            );
+          });
         })()}
       </h1>
     </div>
