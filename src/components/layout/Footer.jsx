@@ -36,14 +36,12 @@ const Footer = ({ className = '', revealTargetRef }) => {
     target: revealTargetRef || containerRef,
     offset: ["start end", "end end"]
   });
-  const revealY = useTransform(scrollYProgress, [0, 1], ['22vh', '0vh']);
 
   return (
-    <motion.footer
+    <footer
       ref={containerRef}
-      style={{ y: revealY }}
       className={cn(
-        'site-gutter-menu relative flex h-screen min-h-screen w-full flex-col overflow-hidden border-t border-borderline/50 bg-surface py-6 text-primary will-change-transform lg:py-12',
+        'footer-reveal site-gutter-menu relative flex h-screen min-h-screen w-full flex-col overflow-hidden border-t border-borderline/50 bg-surface py-6 text-primary lg:py-12',
         className
       )}
     >
@@ -144,7 +142,7 @@ const Footer = ({ className = '', revealTargetRef }) => {
         </motion.div>
         
       </div>
-    </motion.footer>
+    </footer>
   );
 };
 

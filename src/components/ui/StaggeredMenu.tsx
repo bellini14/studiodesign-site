@@ -643,22 +643,89 @@ const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     opacity: footerMenuOpen ? 1 : 0,
     transition: 'max-width 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease-out',
   } as React.CSSProperties;
+  const headerContrastActive = scrollContrastActive || !footerMenuMode;
+
+  const renderLogoBlock = () => (
+    <div
+      className={`sm-logo flex select-none items-center transition-opacity duration-300 ${
+        footerMenuMode ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
+      }`}
+      aria-label="Logo"
+      aria-hidden={footerMenuMode}
+    >
+      {logo ? (
+        logo
+      ) : (
+        <img
+          src={logoUrl}
+          alt="Logo"
+          className="sm-logo-img block h-8 w-auto object-contain"
+          draggable={false}
+          width={110}
+          height={24}
+        />
+      )}
+    </div>
+  );
+
+  const renderToggleButton = () => (
+    <button
+      ref={toggleBtnRef}
+      className={`sm-toggle relative z-20 inline-flex cursor-pointer items-center justify-end gap-2 border-0 bg-transparent p-0 font-medium leading-none ${
+        hideToggleButton ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
+      }`}
+      aria-controls={footerMenuMode ? 'footer-menu-links' : 'staggered-menu-panel'}
+      aria-expanded={footerMenuMode ? footerMenuOpen : open}
+      aria-label={(footerMenuMode ? footerMenuOpen : open) ? 'Close menu' : 'Open menu'}
+      onClick={toggleMenu}
+      type="button"
+    >
+      <span
+        className="sm-toggle-textWrap relative inline-block h-[1em] overflow-hidden whitespace-nowrap text-right"
+        aria-hidden="true"
+      >
+        <span ref={textInnerRef} className="sm-toggle-textInner flex flex-col leading-none">
+          {textLines.map((line, index) => (
+            <span className="sm-toggle-line block h-[1em] leading-none" key={`${line}-${index}`}>
+              {line}
+            </span>
+          ))}
+        </span>
+      </span>
+
+      <span
+        ref={iconRef}
+        className="sm-icon relative inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center [will-change:transform]"
+        aria-hidden="true"
+      >
+        <span
+          ref={plusHRef}
+          className="sm-icon-line absolute left-1/2 top-1/2 h-[1.5px] w-full -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-current [will-change:transform]"
+        />
+        <span
+          ref={plusVRef}
+          className="sm-icon-line absolute left-1/2 top-1/2 h-[1.5px] w-full -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-current [will-change:transform]"
+        />
+      </span>
+    </button>
+  );
 
   return (
-    <div
-      className={`sm-scope z-40 ${
-        isHidden ? 'opacity-0' : 'opacity-100'
-      } ${isFixed ? 'fixed inset-0 overflow-hidden pointer-events-none' : 'h-full w-full'}`}
-      aria-hidden={isHidden}
-      data-hidden={isHidden || undefined}
-      data-scroll-contrast={scrollContrastActive || undefined}
-    >
+    <>
+      {/* Container 1: Panel & Prelayers */}
       <div
-        className={`${className ? `${className} ` : ''}staggered-menu-wrapper relative z-40 h-full w-full pointer-events-none`}
-        style={wrapperStyle}
-        data-open={open || undefined}
-        data-position={position}
+        className={`sm-scope sm-scope-panel z-40 ${
+          isHidden ? 'opacity-0' : 'opacity-100'
+        } ${isFixed ? 'fixed inset-0 overflow-hidden pointer-events-none' : 'absolute inset-0 pointer-events-none'}`}
+        aria-hidden={isHidden}
+        data-hidden={isHidden || undefined}
       >
+        <div
+          className={`${className ? `${className} ` : ''}staggered-menu-wrapper relative h-full w-full pointer-events-none`}
+          style={wrapperStyle}
+          data-open={open || undefined}
+          data-position={position}
+        >
         <div
           ref={preLayersRef}
           className="sm-prelayers pointer-events-none absolute top-0 bottom-0 z-[5]"
@@ -673,30 +740,80 @@ const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           ))}
         </div>
 
+        <aside
+          id="staggered-menu-panel"
+          ref={panelRef}
+          className="staggered-menu-panel pointer-events-auto absolute top-0 z-10 flex h-full flex-col overflow-y-auto bg-white p-[6.5rem_1.5rem_2rem] md:p-[7.5rem_2rem_2rem]"
+          aria-hidden={!open}
+        >
+          <div className="sm-panel-inner flex flex-1 flex-col gap-6">
+            <ul
+              className="sm-panel-list m-0 flex list-none flex-col gap-3 p-0"
+              role="list"
+              data-numbering={displayItemNumbering || undefined}
+            >
+              {items.length ? (
+                items.map((item, index) => (
+                  <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={`${item.label}-${index}`}>
+                    {renderMenuEntry(item, index)}
+                  </li>
+                ))
+              ) : (
+                <li className="sm-panel-itemWrap relative overflow-hidden leading-none" aria-hidden="true">
+                  <span className="sm-panel-item relative inline-block pr-[1.4em] text-[clamp(2.75rem,7vw,4rem)] font-semibold uppercase leading-none tracking-[-0.06em] text-black">
+                    <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
+                      No items
+                    </span>
+                  </span>
+                </li>
+              )}
+            </ul>
+
+            {displaySocials && socialItems.length > 0 && (
+              <div className="sm-socials mt-auto flex flex-col gap-3 pt-8" aria-label="Social links">
+                <h3 className="sm-socials-title m-0 text-base font-medium [color:var(--sm-accent,#ff3b00)]">
+                  Socials
+                </h3>
+                <ul className="sm-socials-list m-0 flex list-none flex-wrap items-center gap-4 p-0" role="list">
+                  {socialItems.map((item, index) => (
+                    <li key={`${item.label}-${index}`} className="sm-socials-item">
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sm-socials-link relative inline-block py-[2px] text-[1.05rem] font-medium text-[#111] no-underline transition-[color,opacity] duration-300 ease-linear"
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
+    </div>
+
+      {/* Container 2: Header */}
+      <div
+        className={`sm-scope sm-scope-header z-50 ${
+          isHidden ? 'opacity-0' : 'opacity-100'
+        } ${isFixed ? 'fixed inset-0 pointer-events-none' : 'absolute inset-0 pointer-events-none'}`}
+        aria-hidden={isHidden}
+        data-hidden={isHidden || undefined}
+        data-scroll-contrast={headerContrastActive || undefined}
+      >
+        <div
+          className={`${className ? `${className} ` : ''}staggered-menu-wrapper relative h-full w-full pointer-events-none`}
+          style={wrapperStyle}
+          data-position={position}
+        >
         <header
           className="staggered-menu-header pointer-events-none absolute left-0 top-0 z-20 flex w-full items-end justify-between"
           aria-label="Main navigation header"
         >
-          <div
-            className={`sm-logo flex select-none items-center transition-opacity duration-300 ${
-              footerMenuMode ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
-            }`}
-            aria-label="Logo"
-            aria-hidden={footerMenuMode}
-          >
-            {logo ? (
-              logo
-            ) : (
-              <img
-                src={logoUrl}
-                alt="Logo"
-                className="sm-logo-img block h-8 w-auto object-contain"
-                draggable={false}
-                width={110}
-                height={24}
-              />
-            )}
-          </div>
+          {renderLogoBlock()}
 
           <nav
             className={`sm-hero-nav absolute left-1/2 bottom-0 flex -translate-x-1/2 items-center justify-center gap-8 xl:gap-10 ${
@@ -760,100 +877,10 @@ const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               </div>
             </nav>
 
-            <button
-              ref={toggleBtnRef}
-              className={`sm-toggle relative z-20 inline-flex cursor-pointer items-center justify-end gap-2 border-0 bg-transparent p-0 font-medium leading-none ${
-                hideToggleButton ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
-              }`}
-              aria-controls={footerMenuMode ? 'footer-menu-links' : 'staggered-menu-panel'}
-              aria-expanded={footerMenuMode ? footerMenuOpen : open}
-              aria-label={(footerMenuMode ? footerMenuOpen : open) ? 'Close menu' : 'Open menu'}
-              onClick={toggleMenu}
-              type="button"
-            >
-              <span
-                className="sm-toggle-textWrap relative inline-block h-[1em] overflow-hidden whitespace-nowrap text-right"
-                aria-hidden="true"
-              >
-                <span ref={textInnerRef} className="sm-toggle-textInner flex flex-col leading-none">
-                  {textLines.map((line, index) => (
-                    <span className="sm-toggle-line block h-[1em] leading-none" key={`${line}-${index}`}>
-                      {line}
-                    </span>
-                  ))}
-                </span>
-              </span>
-
-              <span
-                ref={iconRef}
-                className="sm-icon relative inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center [will-change:transform]"
-                aria-hidden="true"
-              >
-                <span
-                  ref={plusHRef}
-                  className="sm-icon-line absolute left-1/2 top-1/2 h-[1.5px] w-full -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-current [will-change:transform]"
-                />
-                <span
-                  ref={plusVRef}
-                  className="sm-icon-line absolute left-1/2 top-1/2 h-[1.5px] w-full -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-current [will-change:transform]"
-                />
-              </span>
-            </button>
+            {renderToggleButton()}
           </div>
         </header>
-
-        <aside
-          id="staggered-menu-panel"
-          ref={panelRef}
-          className="staggered-menu-panel pointer-events-auto absolute top-0 z-10 flex h-full flex-col overflow-y-auto bg-white p-[6.5rem_1.5rem_2rem] md:p-[7.5rem_2rem_2rem]"
-          aria-hidden={!open}
-        >
-          <div className="sm-panel-inner flex flex-1 flex-col gap-6">
-            <ul
-              className="sm-panel-list m-0 flex list-none flex-col gap-3 p-0"
-              role="list"
-              data-numbering={displayItemNumbering || undefined}
-            >
-              {items.length ? (
-                items.map((item, index) => (
-                  <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={`${item.label}-${index}`}>
-                    {renderMenuEntry(item, index)}
-                  </li>
-                ))
-              ) : (
-                <li className="sm-panel-itemWrap relative overflow-hidden leading-none" aria-hidden="true">
-                  <span className="sm-panel-item relative inline-block pr-[1.4em] text-[clamp(2.75rem,7vw,4rem)] font-semibold uppercase leading-none tracking-[-0.06em] text-black">
-                    <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
-                      No items
-                    </span>
-                  </span>
-                </li>
-              )}
-            </ul>
-
-            {displaySocials && socialItems.length > 0 && (
-              <div className="sm-socials mt-auto flex flex-col gap-3 pt-8" aria-label="Social links">
-                <h3 className="sm-socials-title m-0 text-base font-medium [color:var(--sm-accent,#ff3b00)]">
-                  Socials
-                </h3>
-                <ul className="sm-socials-list m-0 flex list-none flex-wrap items-center gap-4 p-0" role="list">
-                  {socialItems.map((item, index) => (
-                    <li key={`${item.label}-${index}`} className="sm-socials-item">
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="sm-socials-link relative inline-block py-[2px] text-[1.05rem] font-medium text-[#111] no-underline transition-[color,opacity] duration-300 ease-linear"
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </aside>
+        </div>
       </div>
 
       <style>{`
@@ -878,16 +905,32 @@ const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-socials-list:hover .sm-socials-link:not(:hover) { opacity: 0.35; }
 .sm-scope .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) { opacity: 0.35; }
 .sm-scope .sm-socials-link:hover, .sm-scope .sm-socials-link:focus-visible, .sm-scope .sm-panel-item:hover, .sm-scope .sm-panel-item:focus-visible { color: var(--sm-accent, #ff3b00); }
-.sm-scope[data-scroll-contrast='true'] .staggered-menu-header {
+.sm-scope-header[data-scroll-contrast='true'] {
   mix-blend-mode: difference;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 .sm-scope[data-scroll-contrast='true'] .sm-logo,
 .sm-scope[data-scroll-contrast='true'] .sm-logo a,
 .sm-scope[data-scroll-contrast='true'] .sm-logo .menu-logo-text,
-.sm-scope[data-scroll-contrast='true'] .sm-toggle {
-  color: #ffffff !important;
-  opacity: 0.92;
+.sm-scope[data-scroll-contrast='true'] .sm-toggle,
+.sm-scope[data-scroll-contrast='true'] .sm-hero-nav-link,
+.sm-scope[data-scroll-contrast='true'] .sm-hero-nav-link span,
+.sm-scope[data-scroll-contrast='true'] .sm-hero-contact,
+.sm-scope[data-scroll-contrast='true'] .sm-hero-contact span {
+  color: #dedede !important;
   filter: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+.sm-scope[data-scroll-contrast='true'] .sm-logo .menu-logo-text {
+  font-weight: 250 !important;
+}
+.sm-scope[data-scroll-contrast='true'] .sm-toggle {
+  font-weight: 450;
 }
 .sm-scope[data-scroll-contrast='true'] .sm-toggle:hover,
 .sm-scope[data-scroll-contrast='true'] .sm-toggle:focus-visible,
@@ -915,7 +958,7 @@ const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 @media (max-width: 1024px) { .sm-scope .staggered-menu-header { top: 0.85rem; height: 5.25rem; padding-inline: var(--site-gutter-menu); --sm-hero-baseline-offset: 1.35rem; } .sm-scope .sm-logo .menu-logo-text { font-size: 2.1rem; } .sm-scope .sm-hero-nav { display: none !important; } .sm-scope .sm-hero-contact { display: none !important; } }
 @media (max-width: 640px) { .sm-scope .staggered-menu-panel, .sm-scope .sm-prelayers { width: 100vw; } .sm-scope .staggered-menu-header { top: 0.65rem; height: 4.75rem; padding-inline: max(1.125rem, calc(var(--site-gutter-menu) - 0.4rem)); --sm-hero-baseline-offset: 1.15rem; } .sm-scope .sm-logo .menu-logo-text { font-size: 1.75rem; } .sm-scope .sm-toggle { min-width: 5.4rem; font-size: 0.95rem; } .sm-scope .sm-toggle-textWrap { width: 3.1rem; } .sm-scope .sm-icon { height: 16px; width: 16px; } }
       `}</style>
-    </div>
+    </>
   );
 };
 
