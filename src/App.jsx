@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import Lenis from 'lenis';
 import StaggeredMenu from './components/ui/StaggeredMenu';
@@ -14,6 +14,8 @@ import Contact from './pages/Contact';
 import Portfolio from './pages/Portfolio';
 import Blog from './pages/Blog';
 import { CONTACT_INFO } from './data/content';
+import { shouldUsePageTransition } from './utils/navigationTransitions';
+import { scrollToAnchorTarget } from './utils/anchorScroll';
 
 const menuItems = [
   {
@@ -70,6 +72,12 @@ const isSameLocation = (left, right) =>
   left.search === right.search &&
   left.hash === right.hash;
 
+const toUrl = (locationValue) =>
+  new URL(
+    `${locationValue.pathname}${locationValue.search}${locationValue.hash}`,
+    window.location.origin
+  );
+
 const isModifiedClick = (event) =>
   event.metaKey || event.altKey || event.ctrlKey || event.shiftKey || event.button !== 0;
 
@@ -97,7 +105,19 @@ const shouldTrackLinkClick = (event, link) => {
 
   const nextUrl = new URL(link.href, window.location.href);
 
-  return nextUrl.origin === window.location.origin;
+  return shouldUsePageTransition(nextUrl, new URL(window.location.href));
+};
+
+const isSamePageHashLink = (link) => {
+  const nextUrl = new URL(link.href, window.location.href);
+  const currentUrl = new URL(window.location.href);
+
+  return (
+    nextUrl.origin === currentUrl.origin &&
+    nextUrl.pathname === currentUrl.pathname &&
+    nextUrl.search === currentUrl.search &&
+    nextUrl.hash
+  );
 };
 
 function AppContent({
@@ -157,6 +177,7 @@ function AppContent({
 
 function AppShell() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [displayLocation, setDisplayLocation] = useState(location);
   const [showPageTransition, setShowPageTransition] = useState(false);
   const [pageTransitionDirection, setPageTransitionDirection] = useState(
@@ -230,7 +251,24 @@ function AppShell() {
       const target = event.target instanceof Element ? event.target : null;
       const link = target?.closest('a[href]');
 
-      if (!link || !shouldTrackLinkClick(event, link)) {
+      if (!link) {
+        return;
+      }
+
+      if (!event.defaultPrevented && !isModifiedClick(event) && isSamePageHashLink(link)) {
+        const nextUrl = new URL(link.href, window.location.href);
+        const anchorTarget = document.getElementById(decodeURIComponent(nextUrl.hash.slice(1)));
+
+        if (anchorTarget) {
+          event.preventDefault();
+          scrollToAnchorTarget(anchorTarget);
+          navigate(`${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+        }
+
+        return;
+      }
+
+      if (!shouldTrackLinkClick(event, link)) {
         return;
       }
 
@@ -242,7 +280,7 @@ function AppShell() {
     return () => {
       document.removeEventListener('click', handleLinkClick, true);
     };
-  }, []);
+  }, [navigate]);
 
   const animateIncomingContent = useCallback(() => {
     const content = contentRef.current;
@@ -285,6 +323,13 @@ function AppShell() {
         pendingLocationRef.current = displayLocationRef.current;
       }
 
+      return;
+    }
+
+    if (!shouldUsePageTransition(toUrl(location), toUrl(displayLocationRef.current))) {
+      pendingLocationRef.current = null;
+      displayLocationRef.current = location;
+      setDisplayLocation(location);
       return;
     }
 
@@ -423,6 +468,8 @@ function App() {
       touchMultiplier: 2,
     });
 
+    window.__studioLenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -430,7 +477,13 @@ function App() {
 
     requestAnimationFrame(raf);
 
-    return () => lenis.destroy();
+    return () => {
+      if (window.__studioLenis === lenis) {
+        delete window.__studioLenis;
+      }
+
+      lenis.destroy();
+    };
   }, []);
 
   return (

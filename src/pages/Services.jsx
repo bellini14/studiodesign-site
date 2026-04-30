@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowUpRight,
@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { SERVICES } from '../data/content';
+import { scrollToAnchorTarget } from '../utils/anchorScroll';
 
 const ICONS = [Sparkles, Palette, Compass, Monitor];
 
@@ -88,7 +89,7 @@ const ServiceChapter = ({ service, idx }) => {
     offset: ['start end', 'end start'],
   });
 
-  const imageScale = useTransform(scrollYProgress, [0, 0.28, 1], [1.12, 1.02, 1]);
+  const depthOpacity = useTransform(scrollYProgress, [0, 0.42, 0.72, 1], [0, 0.06, 0.24, 0.36]);
   const imageY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
 
   return (
@@ -99,6 +100,36 @@ const ServiceChapter = ({ service, idx }) => {
       style={{ '--chapter-index': idx }}
     >
       <motion.div className="service-chapter__panel site-gutter-menu relative w-full">
+        <div className="service-chapter__stack">
+          <div className="service-chapter__title-card">
+            <h3>{service.title}</h3>
+            <span>0{idx + 1}</span>
+          </div>
+
+          <div className="service-chapter__content-card">
+            <div className="service-chapter__copy-card">
+              <p>{service.description}</p>
+
+              <div className="service-chapter__details">
+                <div className="service-chapter__capabilities">
+                  {service.capabilities.map((cap) => (
+                    <span key={cap}>{cap}</span>
+                  ))}
+                </div>
+                <span className="service-chapter__cta">Inquire now</span>
+              </div>
+            </div>
+
+            <div className="service-chapter__visual-card">
+              <motion.img
+                src={service.bgImage}
+                alt={service.title}
+                loading="lazy"
+                style={{ y: imageY }}
+              />
+            </div>
+          </div>
+        </div>
         <motion.div className="grid gap-10 lg:grid-cols-[0.36fr_1.18fr_0.7fr] lg:gap-12">
           <aside
             className="service-chapter__rail order-1 flex flex-row gap-4 lg:flex-col lg:justify-between"
@@ -123,9 +154,9 @@ const ServiceChapter = ({ service, idx }) => {
               <motion.img
                 src={service.bgImage}
                 alt={service.title}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-105"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.19,1,0.22,1)]"
                 loading="lazy"
-                style={{ scale: imageScale, y: imageY }}
+                style={{ y: imageY }}
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,17,15,0)_0%,rgba(20,17,15,0.22)_48%,rgba(20,17,15,0.76)_100%)]" />
               <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-end justify-between gap-4">
@@ -185,6 +216,11 @@ const ServiceChapter = ({ service, idx }) => {
             </div>
           </motion.div>
         </motion.div>
+        <motion.div
+          className="service-chapter__depth-overlay"
+          style={{ opacity: depthOpacity }}
+          aria-hidden="true"
+        />
       </motion.div>
     </section>
   );
@@ -192,6 +228,7 @@ const ServiceChapter = ({ service, idx }) => {
 
 const Services = () => {
   const { hash } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!hash) {
@@ -204,10 +241,18 @@ const Services = () => {
       return;
     }
 
-    window.requestAnimationFrame(() => {
-      target.scrollIntoView({ block: 'start' });
-    });
+    scrollToAnchorTarget(target);
   }, [hash]);
+
+  const handleSpecialtyAnchorClick = (event, serviceId) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+
+    event.preventDefault();
+    scrollToAnchorTarget(document.getElementById(`service-${serviceId}`));
+    navigate(`#service-${serviceId}`);
+  };
 
   return (
     <div className="services-page bg-base">
@@ -302,6 +347,7 @@ const Services = () => {
                 <a
                   key={area.title}
                   href={`#service-${SERVICES[idx].id}`}
+                  onClick={(event) => handleSpecialtyAnchorClick(event, SERVICES[idx].id)}
                   className="services-specialty-card group"
                 >
                   <Icon className="services-specialty-card__icon" strokeWidth={1.55} />
