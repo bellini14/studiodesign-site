@@ -152,7 +152,7 @@ function AppContent({
 
   return (
     <div className={`relative isolate flex min-h-screen flex-col ${className}`.trim()}>
-      <main className="footer-reveal__content relative z-10 flex-grow bg-base">
+      <main className="relative z-10 flex-grow bg-base shadow-[0_28px_90px_rgba(20,17,15,0.16)]">
         <Routes location={routeLocation}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -165,11 +165,11 @@ function AppContent({
       <div
         ref={footerRevealRef}
         aria-hidden="true"
-        className="footer-reveal__spacer pointer-events-none"
+        className="h-screen min-h-screen pointer-events-none"
       />
       <Footer
         revealTargetRef={footerRevealRef}
-        className="footer-reveal__footer"
+        className="fixed inset-x-0 bottom-0 z-0"
       />
     </div>
   );

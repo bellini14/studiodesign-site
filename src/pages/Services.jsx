@@ -4,12 +4,18 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowUpRight,
   Check,
+  Briefcase,
+  Cpu,
+  Factory,
+  GraduationCap,
+  HeartPulse,
+  Landmark,
   Compass,
-  Layers,
   Monitor,
   Palette,
   Rocket,
-  Search,
+  ShoppingBag,
+  Sprout,
   Sparkles,
 } from 'lucide-react';
 import { SERVICES } from '../data/content';
@@ -18,69 +24,66 @@ import { scrollToAnchorTarget } from '../utils/anchorScroll';
 const ICONS = [Sparkles, Palette, Compass, Monitor];
 
 const SERVICE_INTENTS = [
-  'Clarificar o lugar que a marca ocupa e a conversa que ela lidera.',
-  'Construir uma linguagem visual reconhecível, consistente e fácil de aplicar.',
-  'Definir a expressão criativa para campanhas, conteúdos e experiências.',
-  'Converter estratégia em interfaces digitais claras, desejáveis e escaláveis.',
+  'Clareza para posicionar, diferenciar e conduzir.',
+  'Cultura para sustentar a marca na prática.',
+  'Identidade para tornar a estratégia reconhecível.',
+  'Experiências para conectar marca, utilidade e valor.',
 ];
 
 const SERVICE_METRICS = [
-  ['Norte estratégico', 'Sistema verbal', 'Arquitetura'],
-  ['Marca gráfica', 'Kit visual', 'Guidelines'],
-  ['Direção de arte', 'Biblioteca visual', 'Ritmo editorial'],
-  ['UX/UI', 'Protótipos', 'Design system'],
+  ['Diagnóstico', 'Posicionamento', 'Arquitetura'],
+  ['Cultura', 'Comportamentos', 'Ativações'],
+  ['Identidade verbal', 'Identidade visual', 'Diretrizes'],
+  ['Sites', 'UI/UX', 'Interação'],
 ];
 
 const SPECIALTY_AREAS = [
   {
-    title: 'Estratégia',
-    desc: 'Posicionamento, arquitetura de marca e definição de categoria.',
+    title: 'Estratégia de Marca',
+    desc: 'Clareza para posicionar, diferenciar e conduzir.',
   },
   {
-    title: 'Identidade',
-    desc: 'Design visual, narrativas, tom de voz e sistemas tipográficos.',
+    title: 'Cultura de Marca',
+    desc: 'Cultura para sustentar a marca na prática.',
   },
   {
-    title: 'Experiência',
-    desc: 'Produtos digitais, interfaces, websites e interações de marca.',
+    title: 'Identidade de Marca',
+    desc: 'Identidade para tornar a estratégia reconhecível.',
   },
   {
-    title: 'Estruturas',
-    desc: 'Design systems, guidelines corporativos e cultura interna.',
+    title: 'Experiência de Marca',
+    desc: 'Experiências para conectar marca, utilidade e valor.',
   },
 ];
 
-const PROCESS_STEPS = [
-  {
-    icon: Search,
-    number: '01',
-    title: 'Imersão & Estratégia',
-    desc: 'Entendemos contexto, público, ambição e território competitivo antes de desenhar qualquer expressão.',
-  },
-  {
-    icon: Palette,
-    number: '02',
-    title: 'Direção de Marca',
-    desc: 'Traduzimos posicionamento em linguagem visual, verbal e sensorial com critério de aplicação real.',
-  },
-  {
-    icon: Layers,
-    number: '03',
-    title: 'Sistema & Aplicações',
-    desc: 'Expandimos a marca em componentes, regras e materiais que mantêm consistência sem engessar o uso.',
-  },
-  {
-    icon: Rocket,
-    number: '04',
-    title: 'Entrega & Ativacao',
-    desc: 'Organizamos arquivos, guias e direcionamentos para a equipe operar a marca com autonomia.',
-  },
+
+const OPERATING_AREAS = [
+  { label: 'Indústria e Manufatura', icon: Factory },
+  { label: 'Tecnologia e Software', icon: Cpu },
+  { label: 'Consultoria e Serviços B2B', icon: Briefcase },
+  { label: 'Saúde e Bem-Estar', icon: HeartPulse },
+  { label: 'Varejo e Consumo', icon: ShoppingBag },
+  { label: 'Educação', icon: GraduationCap },
+  { label: 'Agronegócio', icon: Sprout },
+  { label: 'Negócios Familiares', icon: Landmark },
+  { label: 'Startups e Scale-ups', icon: Rocket },
+];
+
+const OPERATING_AREA_IMAGES = [
+  'https://images.unsplash.com/photo-1632085912795-37e28d891fe2?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=900&auto=format&fit=crop',
 ];
 
 const SERVICES_HERO_TEXT =
   'Trabalhamos com líderes, empresas e organizações para transformar visão em posicionamento, estratégia em marca e identidade em sistemas capazes de sustentar crescimento, diferenciação e valor no longo prazo.';
 
-const ServiceChapter = ({ service, idx }) => {
+const ServiceChapter = ({ service, idx, isLast }) => {
   const chapterRef = useRef(null);
   const Icon = ICONS[idx % ICONS.length];
   const isEven = idx % 2 === 0;
@@ -90,13 +93,11 @@ const ServiceChapter = ({ service, idx }) => {
   });
 
   const depthOpacity = useTransform(scrollYProgress, [0, 0.42, 0.72, 1], [0, 0.06, 0.24, 0.36]);
-  const imageY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
-
   return (
     <section
       ref={chapterRef}
       id={`service-${service.id}`}
-      className="service-chapter relative w-full scroll-mt-24 border-t border-primary/8 bg-base"
+      className={`service-chapter relative w-full scroll-mt-24 border-t border-primary/8 bg-base ${isLast ? 'service-chapter--last' : ''}`}
       style={{ '--chapter-index': idx }}
     >
       <motion.div className="service-chapter__panel site-gutter-menu relative w-full">
@@ -125,7 +126,6 @@ const ServiceChapter = ({ service, idx }) => {
                 src={service.bgImage}
                 alt={service.title}
                 loading="lazy"
-                style={{ y: imageY }}
               />
             </div>
           </div>
@@ -156,7 +156,6 @@ const ServiceChapter = ({ service, idx }) => {
                 alt={service.title}
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.19,1,0.22,1)]"
                 loading="lazy"
-                style={{ y: imageY }}
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,17,15,0)_0%,rgba(20,17,15,0.22)_48%,rgba(20,17,15,0.76)_100%)]" />
               <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-end justify-between gap-4">
@@ -381,103 +380,66 @@ const Services = () => {
           key={service.id}
           service={service}
           idx={idx}
+          isLast={idx === SERVICES.length - 1}
         />
       ))}
 
-      <section className="relative w-full overflow-hidden bg-[#14110f]">
-        <div className="services-process__field absolute inset-0 pointer-events-none" />
-        <div className="site-gutter-menu relative w-full py-28 md:py-36">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="mb-20 grid gap-8 md:mb-24 md:grid-cols-[0.55fr_1fr]"
-          >
-            <div className="mb-2 flex items-start gap-4">
-              <span className="mt-2 h-px w-10 bg-[#ff3b00]" />
-              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#ff8b68]">
-                Processo
-              </span>
-            </div>
-            <h2 className="max-w-[17ch] text-[clamp(2.2rem,4.8vw,4.2rem)] font-semibold leading-[1.02] tracking-tight text-white">
-              Um método para transformar visão em marca operável.
-            </h2>
-          </motion.div>
+      <section className="operating-areas-section relative w-full overflow-hidden bg-base">
+        <div className="site-gutter-menu relative mx-auto w-full py-16 sm:py-20 md:py-24 lg:py-28">
+          <div className="operating-areas-section__grid">
+            <div className="operating-areas-section__content">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7 }}
+                className="operating-areas-section__heading"
+              >
+                <h2>Áreas de Atuação</h2>
+              </motion.div>
 
-          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[1.4rem] border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-            {PROCESS_STEPS.map((step, idx) => {
-              const StepIcon = step.icon;
+              <div className="operating-areas-section__list">
+                {OPERATING_AREAS.map((area, idx) => {
+                  const AreaIcon = area.icon;
 
-              return (
-                <motion.div
-                  key={step.number}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.12 }}
-                  className="group relative min-h-[320px] bg-[#14110f]/92 p-7 transition-colors duration-500 hover:bg-[#1d1815]"
-                >
-                  <span className="mb-10 block text-[clamp(3rem,6vw,4.6rem)] font-semibold leading-none tracking-tight text-white/8 transition-colors duration-500 group-hover:text-[#ff3b00]/24">
-                    {step.number}
-                  </span>
-                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors duration-400 group-hover:border-[#ff3b00]/30 group-hover:bg-[#ff3b00]/10">
-                    <StepIcon className="h-5 w-5 text-white/60 transition-colors duration-400 group-hover:text-[#ff8b68]" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="mb-4 text-lg font-medium tracking-tight text-white">{step.title}</h3>
-                  <p className="max-w-[28ch] text-sm leading-relaxed text-white/50">{step.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative w-full overflow-hidden bg-base">
-        <div className="services-cta__grid absolute inset-0 pointer-events-none" />
-        <div className="relative grid w-full items-center gap-12 site-gutter-menu py-28 md:grid-cols-[0.7fr_1fr] md:py-40">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.75 }}
-          >
-            <span className="mb-6 block text-xs font-semibold uppercase tracking-[0.25em] text-[#ff3b00]">
-              Pronto para começar?
-            </span>
-            <h2 className="max-w-[13ch] text-[clamp(2.4rem,5vw,5rem)] font-semibold leading-[0.98] tracking-tight text-primary">
-              Vamos criar uma marca que sabe para onde vai.
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 34 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex flex-col items-start gap-8 md:items-end md:text-right"
-          >
-            <p className="max-w-[31rem] text-[clamp(1rem,1.15vw,1.18rem)] leading-[1.72] text-secondary">
-              Se a marca precisa amadurecer, reposicionar ou ganhar uma linguagem mais consistente, o primeiro passo é organizar o sistema.
-            </p>
-            <Link
-              to="/contact"
-              className="group relative inline-flex shrink-0 overflow-hidden rounded-full border border-[#ff3b00] bg-surface whitespace-nowrap shadow-[0_18px_46px_rgba(255,59,0,0.16)]"
-            >
-              <div className="relative flex h-[60px] w-[240px] flex-col md:h-[70px] md:w-[280px]">
-                <div className="flex h-full w-full items-center justify-center bg-transparent transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
-                  <span className="text-sm font-semibold uppercase leading-none tracking-widest text-primary md:text-base">
-                    Vamos Criar Agora
-                  </span>
-                </div>
-                <div className="absolute inset-0 flex h-full w-full translate-y-full items-center justify-center bg-[#ff3b00] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:translate-y-0" aria-hidden="true">
-                  <span className="text-sm font-semibold uppercase leading-none tracking-widest text-white md:text-base">
-                    Vamos Criar Agora
-                  </span>
-                </div>
+                  return (
+                    <motion.div
+                      key={area.label}
+                      initial={{ opacity: 0, y: 18 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{ duration: 0.55, delay: idx * 0.04 }}
+                      className="operating-areas-section__item"
+                    >
+                      <span className="operating-areas-section__icon">
+                        <AreaIcon aria-hidden="true" strokeWidth={1.55} />
+                      </span>
+                      <span>{area.label}</span>
+                    </motion.div>
+                  );
+                })}
               </div>
-            </Link>
-          </motion.div>
+            </div>
+
+            <div className="operating-areas-section__visual" aria-hidden="true">
+              <div className="operating-areas-section__fade operating-areas-section__fade--top" />
+              <div className="operating-areas-section__fade operating-areas-section__fade--bottom" />
+              <div className="operating-areas-section__column">
+                {OPERATING_AREA_IMAGES.map((src, idx) => (
+                  <div className="operating-areas-section__tile" key={`left-${src}-${idx}`}>
+                    <img src={src} alt="" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+              <div className="operating-areas-section__column operating-areas-section__column--offset">
+                {[...OPERATING_AREA_IMAGES].reverse().map((src, idx) => (
+                  <div className="operating-areas-section__tile" key={`right-${src}-${idx}`}>
+                    <img src={src} alt="" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
