@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
@@ -65,7 +65,6 @@ const OPERATING_AREAS = [
   { label: 'Varejo e Consumo', icon: ShoppingBag },
   { label: 'Educação', icon: GraduationCap },
   { label: 'Agronegócio', icon: Sprout },
-  { label: 'Negócios Familiares', icon: Landmark },
   { label: 'Startups e Scale-ups', icon: Rocket },
 ];
 
@@ -79,6 +78,66 @@ const OPERATING_AREA_IMAGES = [
   'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=900&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=900&auto=format&fit=crop',
 ];
+
+const EXCLUSIVE_PROGRAMS = [
+  {
+    name: 'Grow®',
+    tagline: 'Clareza para crescer',
+    description:
+      'Grow® é para empresas que precisam organizar sua marca, alinhar direção e construir uma base sólida para avançar com consistência. Ideal para momentos de estruturação, aceleração ou reposicionamento inicial.',
+    cta: 'Explore o Grow®',
+    icon: Sprout,
+  },
+  {
+    name: 'Núcleo®',
+    tagline: 'Estratégia no centro da marca',
+    description:
+      'Núcleo® é para organizações que precisam aprofundar posicionamento, consolidar identidade e estruturar sistemas de marca capazes de orientar comunicação, cultura e tomada de decisão no longo prazo.',
+    cta: 'Explore o Núcleo®',
+    icon: Compass,
+  },
+  {
+    name: 'Transformação®',
+    tagline: 'Mudança com impacto real',
+    description:
+      'Transformação® é para empresas que enfrentam movimentos decisivos — crescimento acelerado, expansão, M&A, rebranding ou mudança estratégica. Reestruturamos a marca para sustentar novos ciclos de valor, relevância e liderança.',
+    cta: 'Explore o Transformação®',
+    icon: Rocket,
+  },
+];
+
+const TRUST_BUILT_TESTIMONIALS = [
+  {
+    image:
+      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1200&auto=format&fit=crop',
+    quote:
+      'A Studio Design nos ajudou a organizar a marca em um momento decisivo. O processo trouxe clareza para a liderança e consistência para a forma como nos apresentamos ao mercado.',
+    name: 'Marina Costa',
+    role: 'Diretora de Marketing, Voltera',
+  },
+  {
+    image:
+      'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200&auto=format&fit=crop',
+    quote:
+      'O trabalho conectou estratégia, identidade e cultura de um jeito muito prático. A marca deixou de ser apenas comunicação e passou a orientar decisões importantes do negócio.',
+    name: 'Rafael Almeida',
+    role: 'CEO, Nexo Labs',
+  },
+  {
+    image:
+      'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop',
+    quote:
+      'Ganhamos uma base sólida para crescer. O sistema criado deu segurança para expandir campanhas, produto e presença comercial sem perder coerência.',
+    name: 'Camila Torres',
+    role: 'Head de Marca, Arco&Co',
+  },
+];
+
+const getTrustReadDuration = (quote) => {
+  const words = quote.trim().split(/\s+/).length;
+
+  return Math.min(Math.max(words * 520, 9500), 15000);
+};
 
 const SERVICES_HERO_TEXT =
   'Trabalhamos com líderes, empresas e organizações para transformar visão em posicionamento, estratégia em marca e identidade em sistemas capazes de sustentar crescimento, diferenciação e valor no longo prazo.';
@@ -228,6 +287,18 @@ const ServiceChapter = ({ service, idx, isLast }) => {
 const Services = () => {
   const { hash } = useLocation();
   const navigate = useNavigate();
+  const [activeProgramIndex, setActiveProgramIndex] = useState(0);
+  const [activeTrustIndex, setActiveTrustIndex] = useState(0);
+  const [trustCursorVisible, setTrustCursorVisible] = useState(false);
+  const [trustCursorDirection, setTrustCursorDirection] = useState('next');
+  const activeProgram = EXCLUSIVE_PROGRAMS[activeProgramIndex];
+  const activeTrust = TRUST_BUILT_TESTIMONIALS[activeTrustIndex];
+  const activeTrustReadDuration = getTrustReadDuration(activeTrust.quote);
+  const trustSectionRef = useRef(null);
+  const trustCursorFrameRef = useRef(null);
+  const trustCursorActiveRef = useRef(false);
+  const trustCursorTargetRef = useRef({ x: 0, y: 0 });
+  const trustCursorPositionRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!hash) {
@@ -243,6 +314,20 @@ const Services = () => {
     scrollToAnchorTarget(target);
   }, [hash]);
 
+  useEffect(() => () => {
+    if (trustCursorFrameRef.current) {
+      cancelAnimationFrame(trustCursorFrameRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setActiveTrustIndex((current) => (current + 1) % TRUST_BUILT_TESTIMONIALS.length);
+    }, activeTrustReadDuration);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [activeTrustIndex, activeTrustReadDuration]);
+
   const handleSpecialtyAnchorClick = (event, serviceId) => {
     if (event.defaultPrevented) {
       return;
@@ -251,6 +336,82 @@ const Services = () => {
     event.preventDefault();
     scrollToAnchorTarget(document.getElementById(`service-${serviceId}`));
     navigate(`#service-${serviceId}`);
+  };
+
+  const handleTrustNavigation = () => {
+    setActiveTrustIndex((current) => {
+      if (trustCursorDirection === 'previous') {
+        return (current - 1 + TRUST_BUILT_TESTIMONIALS.length) % TRUST_BUILT_TESTIMONIALS.length;
+      }
+
+      return (current + 1) % TRUST_BUILT_TESTIMONIALS.length;
+    });
+  };
+
+  const animateTrustCursor = () => {
+    const section = trustSectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    const current = trustCursorPositionRef.current;
+    const target = trustCursorTargetRef.current;
+
+    current.x += (target.x - current.x) * 0.18;
+    current.y += (target.y - current.y) * 0.18;
+
+    section.style.setProperty('--trust-cursor-x', `${current.x}px`);
+    section.style.setProperty('--trust-cursor-y', `${current.y}px`);
+
+    if (trustCursorActiveRef.current) {
+      trustCursorFrameRef.current = requestAnimationFrame(animateTrustCursor);
+    }
+  };
+
+  const updateTrustCursorTarget = (event, shouldSync = false) => {
+    const section = trustSectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    const rect = section.getBoundingClientRect();
+    const nextPosition = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+
+    trustCursorTargetRef.current = nextPosition;
+    setTrustCursorDirection(nextPosition.x < rect.width / 2 ? 'previous' : 'next');
+
+    if (shouldSync) {
+      trustCursorPositionRef.current = nextPosition;
+      section.style.setProperty('--trust-cursor-x', `${nextPosition.x}px`);
+      section.style.setProperty('--trust-cursor-y', `${nextPosition.y}px`);
+    }
+  };
+
+  const handleTrustMouseEnter = (event) => {
+    updateTrustCursorTarget(event, true);
+    trustCursorActiveRef.current = true;
+    setTrustCursorVisible(true);
+
+    if (trustCursorFrameRef.current) {
+      cancelAnimationFrame(trustCursorFrameRef.current);
+    }
+
+    trustCursorFrameRef.current = requestAnimationFrame(animateTrustCursor);
+  };
+
+  const handleTrustMouseLeave = () => {
+    trustCursorActiveRef.current = false;
+    setTrustCursorVisible(false);
+
+    if (trustCursorFrameRef.current) {
+      cancelAnimationFrame(trustCursorFrameRef.current);
+      trustCursorFrameRef.current = null;
+    }
   };
 
   return (
@@ -395,7 +556,11 @@ const Services = () => {
                 transition={{ duration: 0.7 }}
                 className="operating-areas-section__heading"
               >
+                <p className="operating-areas-section__eyebrow">Mercados e segmentos</p>
                 <h2>Áreas de Atuação</h2>
+                <p className="operating-areas-section__intro">
+                  Experiência aplicada em mercados que precisam transformar complexidade em direção clara, presença consistente e crescimento sustentável.
+                </p>
               </motion.div>
 
               <div className="operating-areas-section__list">
@@ -425,14 +590,14 @@ const Services = () => {
               <div className="operating-areas-section__fade operating-areas-section__fade--top" />
               <div className="operating-areas-section__fade operating-areas-section__fade--bottom" />
               <div className="operating-areas-section__column">
-                {OPERATING_AREA_IMAGES.map((src, idx) => (
+                {[...OPERATING_AREA_IMAGES, ...OPERATING_AREA_IMAGES].map((src, idx) => (
                   <div className="operating-areas-section__tile" key={`left-${src}-${idx}`}>
                     <img src={src} alt="" loading="lazy" />
                   </div>
                 ))}
               </div>
               <div className="operating-areas-section__column operating-areas-section__column--offset">
-                {[...OPERATING_AREA_IMAGES].reverse().map((src, idx) => (
+                {[...OPERATING_AREA_IMAGES, ...OPERATING_AREA_IMAGES].reverse().map((src, idx) => (
                   <div className="operating-areas-section__tile" key={`right-${src}-${idx}`}>
                     <img src={src} alt="" loading="lazy" />
                   </div>
@@ -441,6 +606,183 @@ const Services = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="growth-path-section relative w-full overflow-hidden bg-base">
+        <div className="site-gutter-menu relative mx-auto w-full">
+          <div className="growth-path-section__grid">
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 0.65 }}
+              className="growth-path-section__kicker"
+            >
+              Escolha o seu caminho para o crescimento.
+            </motion.p>
+
+            <div className="growth-path-section__content">
+              <motion.h2
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
+              >
+                Projetos de marca orientados a resultados, criados para gerar clareza, alinhamento e valor sustentável.
+              </motion.h2>
+
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.7, delay: 0.12 }}
+                className="growth-path-section__body"
+              >
+                <p>
+                  Negócios relevantes exigem mais do que entregas isoladas. Precisam de direção estratégica, método consistente e um caminho claro entre percepção e resultado. Nossos projetos são programas estruturados que unem estratégia, identidade e experiência para resolver desafios reais de negócio.
+                </p>
+                <p>
+                  Alinhamos lideranças, definimos posicionamentos, organizamos sistemas de marca e criamos bases capazes de sustentar cultura, reconhecimento de mercado e crescimento ao longo do tempo.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="exclusive-programs-section relative w-full overflow-hidden bg-base text-primary">
+        <div className="exclusive-programs-section__inner site-gutter-menu mx-auto w-full">
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.72, ease: [0.19, 1, 0.22, 1] }}
+            className="exclusive-programs-section__title"
+          >
+            Programas <span>exclusivos</span>
+          </motion.h2>
+
+          <div className="exclusive-programs-section__tabs" role="tablist" aria-label="Programas exclusivos">
+            {EXCLUSIVE_PROGRAMS.map((program, idx) => {
+              const ProgramIcon = program.icon;
+              const isActive = idx === activeProgramIndex;
+
+              return (
+                <button
+                  key={program.name}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls="exclusive-program-panel"
+                  className={`exclusive-programs-section__tab ${isActive ? 'exclusive-programs-section__tab--active' : ''}`}
+                  onClick={() => setActiveProgramIndex(idx)}
+                >
+                  <span className="exclusive-programs-section__icon">
+                    <ProgramIcon aria-hidden="true" strokeWidth={1.5} />
+                  </span>
+                  <span className="exclusive-programs-section__tab-label">{program.name}</span>
+                  {isActive && <span className="exclusive-programs-section__glow" aria-hidden="true" />}
+                </button>
+              );
+            })}
+          </div>
+
+          <motion.div
+            key={activeProgram.name}
+            id="exclusive-program-panel"
+            role="tabpanel"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+            className="exclusive-programs-section__panel"
+          >
+            <div className="exclusive-programs-section__panel-heading">
+              <p>{activeProgram.name}</p>
+              <h3>{activeProgram.tagline}</h3>
+              <Link to="/contact" className="exclusive-programs-section__cta">
+                {activeProgram.cta}
+              </Link>
+            </div>
+
+            <div className="exclusive-programs-section__panel-copy">
+              <h4>{activeProgram.tagline}</h4>
+              <p>{activeProgram.description}</p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section
+        ref={trustSectionRef}
+        className={`trust-built-section relative w-full overflow-hidden bg-base text-primary ${trustCursorVisible ? 'trust-built-section--cursor-visible' : ''}`}
+        onMouseEnter={handleTrustMouseEnter}
+        onMouseLeave={handleTrustMouseLeave}
+        onMouseMove={updateTrustCursorTarget}
+        onClick={handleTrustNavigation}
+      >
+        <div className="trust-built-section__inner site-gutter-menu mx-auto w-full">
+          <div className="trust-built-section__grid">
+            <motion.div
+              key={activeTrust.image}
+              initial={{ opacity: 0, y: 24, scale: 0.985, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              transition={{ duration: 0.62, ease: [0.19, 1, 0.22, 1] }}
+              className="trust-built-section__media"
+            >
+              <img src={activeTrust.image} alt="" loading="lazy" />
+            </motion.div>
+
+            <div className="trust-built-section__content">
+              <div className="trust-built-section__statement">
+                <motion.p
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.45 }}
+                  transition={{ duration: 0.62, ease: [0.19, 1, 0.22, 1] }}
+                  className="trust-built-section__eyebrow"
+                >
+                  Confiança construída
+                </motion.p>
+
+                <motion.blockquote
+                  key={activeTrust.quote}
+                  initial={{ opacity: 0, y: 26, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.68, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
+                >
+                  “{activeTrust.quote}”
+                </motion.blockquote>
+              </div>
+
+              <div className="trust-built-section__footer">
+                <motion.div
+                  key={`${activeTrust.name}-${activeTrust.role}`}
+                  initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.52, delay: 0.22, ease: [0.19, 1, 0.22, 1] }}
+                >
+                  <h3>{activeTrust.name}</h3>
+                  <p>{activeTrust.role}</p>
+                </motion.div>
+
+                <div className="trust-built-section__markers" aria-hidden="true">
+                  {TRUST_BUILT_TESTIMONIALS.map((testimonial, idx) => (
+                    <span
+                      key={testimonial.name}
+                      className={idx === activeTrustIndex ? 'is-active' : ''}
+                      style={{ '--trust-duration': `${activeTrustReadDuration}ms` }}
+                    >
+                      <i />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button className="trust-built-section__cursor" type="button" tabIndex={-1} aria-hidden="true">
+          {trustCursorDirection === 'previous' ? 'Anterior' : 'Próximo'}
+        </button>
       </section>
     </div>
   );
