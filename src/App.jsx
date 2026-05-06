@@ -10,6 +10,7 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import Services from './pages/Services';
+import Method from './pages/Method';
 import Contact from './pages/Contact';
 import Portfolio from './pages/Portfolio';
 import Blog from './pages/Blog';
@@ -31,7 +32,7 @@ const menuItems = [
   {
     label: 'Método',
     ariaLabel: 'Ir para a pagina de metodo',
-    link: '#metodo',
+    link: '/metodo',
   },
   {
     label: 'Sobre',
@@ -157,6 +158,7 @@ function AppContent({
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/metodo" element={<Method />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/futuros" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />

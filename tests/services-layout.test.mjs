@@ -14,17 +14,21 @@ try {
     const serviceChapters = [...document.querySelectorAll('.service-chapter')];
     const penultimateChapter = serviceChapters.at(-2);
     const operatingAreas = document.querySelector('.operating-areas-section');
-    const postStack = document.querySelector('.services-post-stack-section');
-    const ctaGrid = document.querySelector('.services-cta__grid');
+    const growthPath = document.querySelector('.growth-path-section');
+    const exclusivePrograms = document.querySelector('.exclusive-programs-section');
+    const trustBuilt = document.querySelector('.trust-built-section');
     const lastChapterPanel = document.querySelector('.service-chapter--last .service-chapter__panel');
 
-    if (!lastChapter || !penultimateChapter || !operatingAreas || !lastChapterPanel) {
+    if (!lastChapter || !penultimateChapter || !operatingAreas || !growthPath || !exclusivePrograms || !trustBuilt || !lastChapterPanel) {
       return null;
     }
 
     const lastRect = lastChapter.getBoundingClientRect();
     const penultimateRect = penultimateChapter.getBoundingClientRect();
     const operatingRect = operatingAreas.getBoundingClientRect();
+    const growthRect = growthPath.getBoundingClientRect();
+    const exclusiveRect = exclusivePrograms.getBoundingClientRect();
+    const trustRect = trustBuilt.getBoundingClientRect();
     const operatingHeading = operatingAreas.querySelector('.operating-areas-section__heading h2');
     const operatingHeadingRect = operatingHeading?.getBoundingClientRect();
 
@@ -37,12 +41,19 @@ try {
       operatingHeadingTop: operatingHeadingRect ? operatingHeadingRect.top + window.scrollY : null,
       lastChapterBottom: lastRect.bottom + window.scrollY,
       operatingBottom: operatingRect.bottom + window.scrollY,
+      growthTop: growthRect.top + window.scrollY,
+      growthBottom: growthRect.bottom + window.scrollY,
+      exclusiveTop: exclusiveRect.top + window.scrollY,
+      exclusiveBottom: exclusiveRect.bottom + window.scrollY,
+      trustTop: trustRect.top + window.scrollY,
       lastChapterBackground: getComputedStyle(lastChapter).backgroundColor,
       lastChapterPanelBackground: getComputedStyle(lastChapterPanel).backgroundColor,
       lastChapterPanelPosition: getComputedStyle(lastChapterPanel).position,
-      hasPostStack: Boolean(postStack),
-      hasFinalCta: Boolean(ctaGrid),
-      operatingIsLastServicesBlock: operatingAreas.nextElementSibling === null,
+      operatingPreviousSiblingIsLastChapter: operatingAreas.previousElementSibling === lastChapter,
+      growthFollowsOperating: operatingAreas.nextElementSibling === growthPath,
+      exclusiveFollowsGrowth: growthPath.nextElementSibling === exclusivePrograms,
+      trustFollowsExclusive: exclusivePrograms.nextElementSibling === trustBuilt,
+      trustIsLastServicesBlock: trustBuilt.nextElementSibling === null,
     };
   });
 
@@ -61,15 +72,15 @@ try {
     'Last service chapter should start before the previous sticky chapter has finished to preserve overlap.'
   );
   assert.ok(
-    metrics.operatingTop >= metrics.penultimateBottom,
-    'Operating areas should not start until the previous sticky chapter has finished.'
+    metrics.operatingTop >= metrics.lastChapterTop + metrics.viewportHeight,
+    'Operating areas should not cover the visible fourth chapter panel.'
   );
   assert.ok(
-    metrics.operatingTop <= metrics.penultimateBottom + metrics.viewportHeight * 0.16,
+    metrics.operatingTop <= metrics.lastChapterTop + metrics.viewportHeight * 1.2,
     'Operating areas should sit close to the visible fourth chapter content instead of waiting for the full scroll stage to end.'
   );
   assert.ok(
-    metrics.operatingHeadingTop <= metrics.penultimateBottom + metrics.viewportHeight * 0.09,
+    metrics.operatingHeadingTop <= metrics.lastChapterTop + metrics.viewportHeight * 1.45,
     'Operating areas content should appear close to the fourth chapter instead of leaving a large blank area.'
   );
   assert.equal(
@@ -82,9 +93,14 @@ try {
     'rgb(247, 243, 236)',
     'The fourth chapter panel background should use #F7F3EC.'
   );
-  assert.equal(metrics.hasPostStack, false, 'Process block should be removed after operating areas.');
-  assert.equal(metrics.hasFinalCta, false, 'Final CTA block should be removed after operating areas.');
-  assert.equal(metrics.operatingIsLastServicesBlock, true, 'Operating areas should be the final block in Services.');
+  assert.equal(metrics.operatingPreviousSiblingIsLastChapter, true, 'Operating areas should follow the fourth service chapter.');
+  assert.equal(metrics.growthFollowsOperating, true, 'Growth path section should follow operating areas.');
+  assert.equal(metrics.exclusiveFollowsGrowth, true, 'Exclusive programs section should follow growth path.');
+  assert.equal(metrics.trustFollowsExclusive, true, 'Trust section should follow exclusive programs.');
+  assert.equal(metrics.trustIsLastServicesBlock, true, 'Trust section should be the final block in Services.');
+  assert.ok(metrics.growthTop >= metrics.operatingBottom, 'Growth path should not overlap operating areas.');
+  assert.ok(metrics.exclusiveTop >= metrics.growthBottom, 'Exclusive programs should not overlap growth path.');
+  assert.ok(metrics.trustTop >= metrics.exclusiveBottom, 'Trust section should not overlap exclusive programs.');
 } finally {
   await browser.close();
 }

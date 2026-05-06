@@ -16,37 +16,37 @@ export const HERO_CONTENT = {
 export const SERVICES = [
   {
     id: 'branding',
-    title: 'Branding',
+    title: 'Estratégia de Marca',
     description:
-      'Desenvolvemos estratégias de marca que conectam propósito, posicionamento e narrativa. Cada projeto começa com uma imersão profunda no universo do cliente para construir uma base sólida e autêntica.',
-    capabilities: ['Estratégia de Marca', 'Posicionamento', 'Naming & Tom de Voz', 'Arquitetura de Marca'],
+      'Defina seu diferencial e conduza a organização com clareza estratégica. Estruturamos posicionamentos que tornam evidente quem você é, o que entrega, por que importa e como competir de forma relevante no presente e no futuro.',
+    capabilities: ['Pesquisa e Diagnóstico', 'Posicionamento de Marca', 'Visão e Futuro', 'Narrativa Estratégica', 'Arquitetura de Marca', 'Transformação Perceptiva'],
     image: 'https://images.unsplash.com/photo-1632085912795-37e28d891fe2?q=80&w=900&auto=format&fit=crop',
     bgImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop',
   },
   {
     id: 'visual-identity',
-    title: 'Visual Identity',
+    title: 'Cultura de Marca',
     description:
-      'Criamos sistemas visuais precisos e memoráveis, desde logotipos e tipografia até paletas cromáticas e guidelines completos que garantem consistência em todos os pontos de contato.',
-    capabilities: ['Logo & Marca Gráfica', 'Sistema Tipográfico', 'Paleta Cromática', 'Brand Guidelines'],
+      'Transforme a marca em prática cotidiana e alinhe a organização em torno de uma direção comum. Desenvolvemos estruturas culturais que conectam propósito, comportamento e experiência interna para que a marca seja vivida de dentro para fora.',
+    capabilities: ['Estratégia Cultural', 'Valores e Comportamentos', 'Rituais e Reconhecimento', 'Experiência do Colaborador', 'Ativações Internas', 'Imersões e Treinamentos de Marca'],
     image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=900&auto=format&fit=crop',
     bgImage: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1920&auto=format&fit=crop',
   },
   {
     id: 'creative-direction',
-    title: 'Creative Direction',
+    title: 'Identidade de Marca',
     description:
-      'Guiamos a visão criativa holística do projeto, da fotografia ao design espacial, garantindo que cada detalhe visual comunique a essência da marca com intenção e coerência.',
-    capabilities: ['Direção de Arte', 'Fotografia & Styling', 'Design Editorial', 'Curadoria Visual'],
+      'Dê forma à sua estratégia por meio de sistemas de identidade claros, consistentes e escaláveis. Criamos expressões verbais e visuais que traduzem posicionamento em presença, diferenciação e reconhecimento ao longo do tempo.',
+    capabilities: ['Naming e Identidade Verbal', 'Identidade Visual', 'Sistemas de Design', 'Direção de Arte', 'Ativos e Recursos Visuais', 'Diretrizes de Marca'],
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=900&auto=format&fit=crop',
     bgImage: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1920&auto=format&fit=crop',
   },
   {
     id: 'web-design',
-    title: 'Web & Digital Design',
+    title: 'Experiência de Marca',
     description:
-      'Projetamos experiências digitais premium que equilibram refinamento estético, usabilidade intuitiva e objetivos estratégicos, websites, plataformas e interfaces que elevam a presença digital da marca.',
-    capabilities: ['Web Design', 'UI/UX Design', 'Design Systems', 'Prototipagem Interativa'],
+      'Crie experiências digitais e de marca relevantes para públicos exigentes em um ambiente em constante transformação. Desenvolvemos interfaces, interações e pontos de contato que unem utilidade, percepção e valor.',
+    capabilities: ['Design de Sites', 'UI/UX Design', 'Motion Design', 'Design de Produto', 'Design de Interação', 'Inovação em Design'],
     image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=900&auto=format&fit=crop',
     bgImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop',
   },

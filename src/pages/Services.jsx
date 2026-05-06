@@ -142,6 +142,62 @@ const getTrustReadDuration = (quote) => {
 const SERVICES_HERO_TEXT =
   'Trabalhamos com líderes, empresas e organizações para transformar visão em posicionamento, estratégia em marca e identidade em sistemas capazes de sustentar crescimento, diferenciação e valor no longo prazo.';
 
+const ProgramRegisteredName = ({ name }) => {
+  const cleanName = name.replace('®', '');
+
+  return (
+    <>
+      {cleanName}
+      <span className="exclusive-programs-section__registered" aria-label="marca registrada">
+        ®
+      </span>
+    </>
+  );
+};
+
+const SCROLL_REVEAL_VIEWPORT = { once: true, amount: 0.32 };
+const SCROLL_REVEAL_EASE = [0.19, 1, 0.22, 1];
+
+const scrollRevealVariants = {
+  container: {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.04,
+      },
+    },
+  },
+  item: {
+    hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.72, ease: SCROLL_REVEAL_EASE },
+    },
+  },
+  itemSoft: {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.62, ease: SCROLL_REVEAL_EASE },
+    },
+  },
+  media: {
+    hidden: { opacity: 0, y: 22, scale: 0.985, filter: 'blur(8px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      transition: { duration: 0.78, ease: SCROLL_REVEAL_EASE },
+    },
+  },
+};
+
 const ServiceChapter = ({ service, idx, isLast }) => {
   const chapterRef = useRef(null);
   const Icon = ICONS[idx % ICONS.length];
@@ -160,14 +216,20 @@ const ServiceChapter = ({ service, idx, isLast }) => {
       style={{ '--chapter-index': idx }}
     >
       <motion.div className="service-chapter__panel site-gutter-menu relative w-full">
-        <div className="service-chapter__stack">
-          <div className="service-chapter__title-card">
+        <motion.div
+          className="service-chapter__stack"
+          initial="hidden"
+          whileInView="visible"
+          viewport={SCROLL_REVEAL_VIEWPORT}
+          variants={scrollRevealVariants.container}
+        >
+          <motion.div className="service-chapter__title-card" variants={scrollRevealVariants.item}>
             <h3>{service.title}</h3>
             <span>0{idx + 1}</span>
-          </div>
+          </motion.div>
 
-          <div className="service-chapter__content-card">
-            <div className="service-chapter__copy-card">
+          <motion.div className="service-chapter__content-card" variants={scrollRevealVariants.container}>
+            <motion.div className="service-chapter__copy-card" variants={scrollRevealVariants.item}>
               <p>{service.description}</p>
 
               <div className="service-chapter__details">
@@ -178,17 +240,17 @@ const ServiceChapter = ({ service, idx, isLast }) => {
                 </div>
                 <span className="service-chapter__cta">Inquire now</span>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="service-chapter__visual-card">
+            <motion.div className="service-chapter__visual-card" variants={scrollRevealVariants.media}>
               <motion.img
                 src={service.bgImage}
                 alt={service.title}
                 loading="lazy"
               />
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
         <motion.div className="grid gap-10 lg:grid-cols-[0.36fr_1.18fr_0.7fr] lg:gap-12">
           <aside
             className="service-chapter__rail order-1 flex flex-row gap-4 lg:flex-col lg:justify-between"
@@ -465,10 +527,10 @@ const Services = () => {
         <div className="site-gutter-menu relative w-full pb-6 pt-28 md:pb-8 md:pt-24">
           <div className="services-overview__inner">
             <motion.div
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={SCROLL_REVEAL_VIEWPORT}
+              variants={scrollRevealVariants.item}
               className="services-overview__heading"
             >
               <p className="services-overview__kicker">
@@ -480,10 +542,10 @@ const Services = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={SCROLL_REVEAL_VIEWPORT}
+              variants={scrollRevealVariants.item}
               className="services-overview__body"
             >
               <p>
@@ -495,20 +557,27 @@ const Services = () => {
       </section>
 
       <section className="relative w-full bg-base text-primary">
-        <div className="services-index-band site-gutter-menu pb-20">
-          <p className="services-index-band__label">
+        <motion.div
+          className="services-index-band site-gutter-menu pb-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={SCROLL_REVEAL_VIEWPORT}
+          variants={scrollRevealVariants.container}
+        >
+          <motion.p className="services-index-band__label" variants={scrollRevealVariants.item}>
             Áreas de especialização
-          </p>
-          <div className="services-index-band__grid">
+          </motion.p>
+          <motion.div className="services-index-band__grid" variants={scrollRevealVariants.container}>
             {SPECIALTY_AREAS.map((area, idx) => {
               const Icon = ICONS[idx % ICONS.length];
 
               return (
-                <a
+                <motion.a
                   key={area.title}
                   href={`#service-${SERVICES[idx].id}`}
                   onClick={(event) => handleSpecialtyAnchorClick(event, SERVICES[idx].id)}
                   className="services-specialty-card group"
+                  variants={scrollRevealVariants.itemSoft}
                 >
                   <Icon className="services-specialty-card__icon" strokeWidth={1.55} />
                   <span className="services-specialty-card__desc">
@@ -529,11 +598,11 @@ const Services = () => {
                       <ArrowUpRight className="h-4 w-4" strokeWidth={1.8} />
                     </span>
                   </span>
-                </a>
+                </motion.a>
               );
             })}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {SERVICES.map((service, idx) => (
@@ -550,10 +619,10 @@ const Services = () => {
           <div className="operating-areas-section__grid">
             <div className="operating-areas-section__content">
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7 }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={SCROLL_REVEAL_VIEWPORT}
+                variants={scrollRevealVariants.item}
                 className="operating-areas-section__heading"
               >
                 <p className="operating-areas-section__eyebrow">Mercados e segmentos</p>
@@ -563,17 +632,20 @@ const Services = () => {
                 </p>
               </motion.div>
 
-              <div className="operating-areas-section__list">
+              <motion.div
+                className="operating-areas-section__list"
+                initial="hidden"
+                whileInView="visible"
+                viewport={SCROLL_REVEAL_VIEWPORT}
+                variants={scrollRevealVariants.container}
+              >
                 {OPERATING_AREAS.map((area, idx) => {
                   const AreaIcon = area.icon;
 
                   return (
                     <motion.div
                       key={area.label}
-                      initial={{ opacity: 0, y: 18 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.4 }}
-                      transition={{ duration: 0.55, delay: idx * 0.04 }}
+                      variants={scrollRevealVariants.itemSoft}
                       className="operating-areas-section__item"
                     >
                       <span className="operating-areas-section__icon">
@@ -583,7 +655,7 @@ const Services = () => {
                     </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
             </div>
 
             <div className="operating-areas-section__visual" aria-hidden="true">
@@ -612,10 +684,10 @@ const Services = () => {
         <div className="site-gutter-menu relative mx-auto w-full">
           <div className="growth-path-section__grid">
             <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ duration: 0.65 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={SCROLL_REVEAL_VIEWPORT}
+              variants={scrollRevealVariants.itemSoft}
               className="growth-path-section__kicker"
             >
               Escolha o seu caminho para o crescimento.
@@ -623,19 +695,19 @@ const Services = () => {
 
             <div className="growth-path-section__content">
               <motion.h2
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={SCROLL_REVEAL_VIEWPORT}
+                variants={scrollRevealVariants.item}
               >
                 Projetos de marca orientados a resultados, criados para gerar clareza, alinhamento e valor sustentável.
               </motion.h2>
 
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.7, delay: 0.12 }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={SCROLL_REVEAL_VIEWPORT}
+                variants={scrollRevealVariants.item}
                 className="growth-path-section__body"
               >
                 <p>
@@ -653,22 +725,30 @@ const Services = () => {
       <section className="exclusive-programs-section relative w-full overflow-hidden bg-base text-primary">
         <div className="exclusive-programs-section__inner site-gutter-menu mx-auto w-full">
           <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.72, ease: [0.19, 1, 0.22, 1] }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={SCROLL_REVEAL_VIEWPORT}
+            variants={scrollRevealVariants.item}
             className="exclusive-programs-section__title"
           >
             Programas <span>exclusivos</span>
           </motion.h2>
 
-          <div className="exclusive-programs-section__tabs" role="tablist" aria-label="Programas exclusivos">
+          <motion.div
+            className="exclusive-programs-section__tabs"
+            role="tablist"
+            aria-label="Programas exclusivos"
+            initial="hidden"
+            whileInView="visible"
+            viewport={SCROLL_REVEAL_VIEWPORT}
+            variants={scrollRevealVariants.container}
+          >
             {EXCLUSIVE_PROGRAMS.map((program, idx) => {
               const ProgramIcon = program.icon;
               const isActive = idx === activeProgramIndex;
 
               return (
-                <button
+                <motion.button
                   key={program.name}
                   type="button"
                   role="tab"
@@ -676,16 +756,19 @@ const Services = () => {
                   aria-controls="exclusive-program-panel"
                   className={`exclusive-programs-section__tab ${isActive ? 'exclusive-programs-section__tab--active' : ''}`}
                   onClick={() => setActiveProgramIndex(idx)}
+                  variants={scrollRevealVariants.itemSoft}
                 >
                   <span className="exclusive-programs-section__icon">
                     <ProgramIcon aria-hidden="true" strokeWidth={1.5} />
                   </span>
-                  <span className="exclusive-programs-section__tab-label">{program.name}</span>
+                  <span className="exclusive-programs-section__tab-label">
+                    <ProgramRegisteredName name={program.name} />
+                  </span>
                   {isActive && <span className="exclusive-programs-section__glow" aria-hidden="true" />}
-                </button>
+                </motion.button>
               );
             })}
-          </div>
+          </motion.div>
 
           <motion.div
             key={activeProgram.name}
@@ -697,7 +780,9 @@ const Services = () => {
             className="exclusive-programs-section__panel"
           >
             <div className="exclusive-programs-section__panel-heading">
-              <p>{activeProgram.name}</p>
+              <p>
+                <ProgramRegisteredName name={activeProgram.name} />
+              </p>
               <h3>{activeProgram.tagline}</h3>
               <Link to="/contact" className="exclusive-programs-section__cta">
                 {activeProgram.cta}
@@ -735,10 +820,10 @@ const Services = () => {
             <div className="trust-built-section__content">
               <div className="trust-built-section__statement">
                 <motion.p
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.45 }}
-                  transition={{ duration: 0.62, ease: [0.19, 1, 0.22, 1] }}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={SCROLL_REVEAL_VIEWPORT}
+                  variants={scrollRevealVariants.itemSoft}
                   className="trust-built-section__eyebrow"
                 >
                   Confiança construída
