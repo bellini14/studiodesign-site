@@ -102,7 +102,7 @@ assert.match(
 
 assert.match(
   methodSource,
-  /<div className="method-step__content">[\s\S]*<h2>\{step\.title\}<\/h2>[\s\S]*method-step__deliverables[\s\S]*<aside className="method-step__summary">/,
+  /<div className="method-step__content">[\s\S]*<motion\.h2[\s\S]*>\{step\.title\}<\/motion\.h2>[\s\S]*method-step__deliverables[\s\S]*<motion\.aside className="method-step__summary"/,
   'Method step deliverables should sit below the title, with the descriptive summary moved to the side.'
 );
 

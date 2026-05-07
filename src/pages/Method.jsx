@@ -107,6 +107,46 @@ const reveal = {
   },
 };
 
+const methodStepTitleReveal = {
+  rest: {
+    opacity: 0.2,
+    y: 14,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.86, delay: 0.04, ease: revealEase },
+  },
+};
+
+const methodStepDeliverablesReveal = {
+  rest: {
+    opacity: 0.24,
+    y: 16,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.94,
+      delay: 0.18,
+      ease: revealEase,
+    },
+  },
+};
+
+const methodStepSummaryReveal = {
+  rest: {
+    opacity: 0.22,
+    y: 18,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.02, delay: 0.36, ease: revealEase },
+  },
+};
+
 const ctaLineReveal = {
   hidden: {
     y: '112%',
@@ -128,6 +168,7 @@ const Method = () => {
   const stepsRef = useRef(null);
   const principleTextRef = useRef(null);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [revealedStepIndexes, setRevealedStepIndexes] = useState([0]);
   const [principleProgress, setPrincipleProgress] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const stepIndexMotion = useMotionValue(0);
@@ -137,7 +178,7 @@ const Method = () => {
   });
   const { scrollYProgress: principleScrollYProgress } = useScroll({
     target: principleTextRef,
-    offset: ['start 42%', 'end 56%'],
+    offset: ['start 64%', 'end 72%'],
   });
 
   const updateActiveStep = () => {
@@ -177,15 +218,20 @@ const Method = () => {
 
   useEffect(() => {
     stepIndexMotion.set(activeStepIndex);
+    setRevealedStepIndexes((currentIndexes) => (
+      currentIndexes.includes(activeStepIndex)
+        ? currentIndexes
+        : [...currentIndexes, activeStepIndex]
+    ));
   }, [activeStepIndex, stepIndexMotion]);
 
   const activeStepNumber = METHOD_STEPS[activeStepIndex].number;
   const activeStepDigit = activeStepNumber.slice(1);
   const smoothStepIndex = useSpring(stepIndexMotion, prefersReducedMotion
     ? { stiffness: 1000, damping: 120, mass: 0.2 }
-    : { stiffness: 165, damping: 16.5, mass: 0.7 }
+    : { stiffness: 165, damping: 16.5, mass: 1.18 }
   );
-  const digitReelY = useTransform(smoothStepIndex, (latest) => `-${latest}em`);
+  const digitReelOffset = useTransform(smoothStepIndex, (latest) => `-${latest}em`);
   let principleWordIndex = 0;
 
   return (
@@ -231,16 +277,20 @@ const Method = () => {
             </p>
           </motion.div>
         </div>
+
+        <a className="method-scroll-cue" href="#method-steps" aria-label="Role para ver mais">
+          <span className="method-scroll-cue__arrow" aria-hidden="true" />
+        </a>
       </section>
 
-      <section className="method-steps" ref={stepsRef}>
+      <section id="method-steps" className="method-steps" ref={stepsRef}>
         <div className="method-steps__inner site-gutter-menu">
           <div className="method-scroll-number" aria-hidden="true">
             <span className="method-scroll-number__zero">0</span>
             <span className="method-scroll-number__digit-window">
               <motion.span
                 className="method-scroll-number__value method-scroll-number__reel"
-                style={{ y: digitReelY }}
+                style={{ y: digitReelOffset }}
               >
                 {METHOD_STEPS.map((step) => (
                   <span key={step.number}>{step.number.slice(1)}</span>
@@ -249,32 +299,37 @@ const Method = () => {
             </span>
           </div>
           <div className="method-steps__list">
-          {METHOD_STEPS.map((step, index) => (
+          {METHOD_STEPS.map((step, index) => {
+            const stepRevealState = revealedStepIndexes.includes(index) ? 'visible' : 'rest';
+
+            return (
             <motion.article
               key={step.number}
               className="method-step"
               data-active={index === activeStepIndex ? 'true' : 'false'}
-              initial="hidden"
-              whileInView="visible"
-              viewport={revealViewport}
-              variants={reveal}
+              initial={false}
+              animate={stepRevealState}
             >
               <div className="method-step__content">
-                <h2>{step.title}</h2>
-                <div className="method-step__deliverables">
+                <motion.h2 variants={methodStepTitleReveal}>{step.title}</motion.h2>
+                <motion.div
+                  className="method-step__deliverables"
+                  variants={methodStepDeliverablesReveal}
+                >
                 <h3>Entregas possíveis:</h3>
                 <ul>
                   {step.deliverables.map((deliverable) => (
                     <li key={deliverable}>{deliverable}</li>
                   ))}
                 </ul>
-                </div>
+                </motion.div>
               </div>
-              <aside className="method-step__summary">
+              <motion.aside className="method-step__summary" variants={methodStepSummaryReveal}>
                 <p>{step.description}</p>
-              </aside>
+              </motion.aside>
             </motion.article>
-          ))}
+            );
+          })}
           </div>
           <span className="sr-only" aria-live="polite">
             Etapa atual {activeStepNumber}
